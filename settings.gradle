@@ -1,0 +1,2 @@
+include ':kernet_example'
+include ':kernet'
