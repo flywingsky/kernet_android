@@ -26,6 +26,7 @@ import com.kercer.kernet.http.KCHttpListener.KCProgressListener;
 import com.kercer.kernet.http.base.KCHeader;
 import com.kercer.kernet.http.base.KCHeaderGroup;
 import com.kercer.kernet.http.base.KCLog;
+import com.kercer.kernet.http.base.KCStatusLine;
 import com.kercer.kernet.http.error.KCAuthFailureError;
 import com.kercer.kernet.http.error.KCNetError;
 import com.kercer.kernet.http.error.KCTimeoutError;
@@ -167,13 +168,6 @@ public abstract class KCHttpRequest<T> implements Comparable<KCHttpRequest<T>>
 		return mTag;
 	}
 
-	/**
-	 * @return this request's {@link com.kercer.kernet.http.KCHttpListener}.
-	 */
-	public KCHttpListener getErrorListener()
-	{
-		return mHttpListener;
-	}
 
 	/**
 	 * @return A tag for use with {@link TrafficStats#setThreadStatsTag(int)}
@@ -556,11 +550,11 @@ public abstract class KCHttpRequest<T> implements Comparable<KCHttpRequest<T>>
 	 * Receive response headers, callback header group
 	 * @param aHeaderGroup headers
 	 */
-	protected void notifyHeaders(KCHeaderGroup aHeaderGroup)
+	protected void notifyHeaders(KCStatusLine aStatusLine, KCHeaderGroup aHeaderGroup)
 	{
-		if (mProgressListener != null)
+		if (mHttpListener != null)
 		{
-			mProgressListener.onResponseHeaders(aHeaderGroup);
+			mHttpListener.onResponseHeaders(aStatusLine, aHeaderGroup);
 		}
 	}
 
@@ -597,11 +591,19 @@ public abstract class KCHttpRequest<T> implements Comparable<KCHttpRequest<T>>
 
 
 	/**
+	 * @return this request's {@link com.kercer.kernet.http.KCHttpListener}.
+	 */
+	public KCHttpListener getListener()
+	{
+		return mHttpListener;
+	}
+
+	/**
 	 * Set listener for tracking progress
 	 *
 	 * @param listener listener
 	 */
-	public void setOnProgressListener(KCProgressListener listener)
+	public void setProgressListener(KCProgressListener listener)
 	{
 		mProgressListener = listener;
 	}

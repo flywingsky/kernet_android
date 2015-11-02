@@ -23,6 +23,8 @@ import android.widget.ImageView;
 
 import com.kercer.kernet.http.KCHttpRequest;
 import com.kercer.kernet.http.KCHttpResponse;
+import com.kercer.kernet.http.base.KCHeaderGroup;
+import com.kercer.kernet.http.base.KCStatusLine;
 import com.kercer.kernet.http.error.KCNetError;
 import com.kercer.kernet.http.request.KCImageLoader.KCImageListener;
 import com.kercer.kernet.http.request.KCImageLoader.KCImageContainer;
@@ -166,6 +168,12 @@ public class KCImageView extends ImageView
 		// from the network.
 		KCImageContainer newContainer = mImageLoader.get(mUrl, new KCImageListener()
 		{
+			@Override
+			public void onResponseHeaders(KCStatusLine aStatusLine,  KCHeaderGroup aHeaderGroup)
+			{
+
+			}
+
 			@Override
 			public void onHttpError(KCNetError error)
 			{

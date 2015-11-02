@@ -36,12 +36,14 @@ public interface KCHttpStack
 	 * request.getPostBodyContentType().
 	 * </p>
 	 *
-	 * @param request
+	 * @param aRequest
 	 *            the request to perform
-	 * @param additionalHeaders
+	 * @param aAdditionalHeaders
 	 *            additional headers to be sent together with {@link KCHttpRequest#getHeaders()}
+	 * @param aDelivery
+	 *            delivery
 	 * @return the HTTP response
 	 */
-	public KCHttpResponse performRequest(KCHttpRequest<?> request, KCHeaderGroup additionalHeaders) throws IOException, KCAuthFailureError;
+	public KCHttpResponse performRequest(KCHttpRequest<?> aRequest, KCHeaderGroup aAdditionalHeaders, KCDeliveryHttp aDelivery) throws IOException, KCAuthFailureError;
 
 }

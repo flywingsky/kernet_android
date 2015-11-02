@@ -84,7 +84,7 @@ public class KCRequestQueue
 	private final KCNetwork mNetwork;
 
 	/** Response delivery mechanism. */
-	private final KCDeliveryResponse mDelivery;
+	private final KCDeliveryResult mDelivery;
 
 	/** The network dispatchers. */
 	private KCNetworkThread[] mDispatchers;
@@ -106,7 +106,7 @@ public class KCRequestQueue
 	 * @param delivery
 	 *            A ResponseDelivery interface for posting responses and errors
 	 */
-	public KCRequestQueue(KCCache cache, KCNetwork network, int threadPoolSize, KCDeliveryResponse delivery)
+	public KCRequestQueue(KCCache cache, KCNetwork network, int threadPoolSize, KCDeliveryResult delivery)
 	{
 		mCache = cache;
 		mNetwork = network;

@@ -18,17 +18,19 @@ package com.kercer.kernet.http;
 
 import android.os.Handler;
 
-import java.util.concurrent.Executor;
-
+import com.kercer.kernet.http.base.KCHeaderGroup;
+import com.kercer.kernet.http.base.KCStatusLine;
 import com.kercer.kernet.http.error.KCNetError;
+
+import java.util.concurrent.Executor;
 
 /**
  * Delivers responses and errors.
  */
-public class KCDeliveryExecutor implements KCDeliveryResponse
+public class KCDeliveryExecutor implements KCDeliveryResult
 {
 	/** Used for posting responses, typically to the main thread. */
-	private final Executor mResponsePoster;
+	private final Executor mExecutor;
 
 	/**
 	 * Creates a new response delivery interface.
@@ -39,7 +41,7 @@ public class KCDeliveryExecutor implements KCDeliveryResponse
 	public KCDeliveryExecutor(final Handler handler)
 	{
 		// Make an Executor that just wraps the handler.
-		mResponsePoster = new Executor()
+		mExecutor = new Executor()
 		{
 			@Override
 			public void execute(Runnable command)
@@ -57,7 +59,19 @@ public class KCDeliveryExecutor implements KCDeliveryResponse
 	 */
 	public KCDeliveryExecutor(Executor executor)
 	{
-		mResponsePoster = executor;
+		mExecutor = executor;
+	}
+
+	@Override
+	public void postHeaders(final KCHttpRequest<?> aRequest,final KCStatusLine aStatusLine,final KCHeaderGroup aHeaderGroup)
+	{
+		mExecutor.execute(new Runnable() {
+			@Override
+			public void run() {
+				aRequest.notifyHeaders(aStatusLine, aHeaderGroup);
+			}
+		});
+
 	}
 
 	@Override
@@ -71,7 +85,7 @@ public class KCDeliveryExecutor implements KCDeliveryResponse
 	{
 		aRequest.markDelivered();
 		aRequest.addMarker("post-response");
-		mResponsePoster.execute(new ResponseDeliveryRunnable(aRequest, aResponse, aResult, aRunnable));
+		mExecutor.execute(new ResponseDeliveryRunnable(aRequest, aResponse, aResult, aRunnable));
 	}
 
 	@Override
@@ -79,7 +93,7 @@ public class KCDeliveryExecutor implements KCDeliveryResponse
 	{
 		aRequest.addMarker("post-error");
 		KCHttpResult<?> result = KCHttpResult.error(aError);
-		mResponsePoster.execute(new ResponseDeliveryRunnable(aRequest, null, result, null));
+		mExecutor.execute(new ResponseDeliveryRunnable(aRequest, null, result, null));
 	}
 
 	/**

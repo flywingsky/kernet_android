@@ -27,6 +27,8 @@ import com.kercer.kernet.http.KCHttpRequest;
 import com.kercer.kernet.http.KCHttpResponse;
 import com.kercer.kernet.http.KCRequestQueue;
 import com.kercer.kernet.http.KCHttpResult.KCHttpResultListener;
+import com.kercer.kernet.http.base.KCHeaderGroup;
+import com.kercer.kernet.http.base.KCStatusLine;
 import com.kercer.kernet.http.error.KCNetError;
 
 import java.util.HashMap;
@@ -105,6 +107,11 @@ public class KCImageLoader
 	{
 		return new KCImageListener()
 		{
+			@Override
+			public void onResponseHeaders(KCStatusLine aStatusLine,  KCHeaderGroup aHeaderGroup)
+			{
+
+			}
 			@Override
 			public void onHttpError(KCNetError error)
 			{
@@ -288,6 +295,12 @@ public class KCImageLoader
 			}
 		}, maxWidth, maxHeight, scaleType, Config.RGB_565, new KCHttpListener()
 		{
+			@Override
+			public void onResponseHeaders(KCStatusLine aStatusLine,  KCHeaderGroup aHeaderGroup)
+			{
+
+			}
+
 			@Override
 			public void onHttpError(KCNetError error)
 			{

@@ -64,7 +64,7 @@ public class KCNetworkBasic implements KCNetwork
 	}
 
 	@Override
-	public KCHttpResponse performRequest(KCHttpRequest<?> request) throws KCNetError
+	public KCHttpResponse performRequest(KCHttpRequest<?> request, KCDeliveryHttp aDelivery) throws KCNetError
 	{
 		long requestStart = SystemClock.elapsedRealtime();
 		while (true)
@@ -77,7 +77,7 @@ public class KCNetworkBasic implements KCNetwork
 				// Gather headers.
 				KCHeaderGroup additionalHeaders = new KCHeaderGroup();
 				addCacheHeaders(additionalHeaders, request.getCacheEntry());
-				httpResponse = mHttpStack.performRequest(request, additionalHeaders);
+				httpResponse = mHttpStack.performRequest(request, additionalHeaders, aDelivery);
 				int statusCode = httpResponse.getStatusCode();
 
 				responseHeaders = httpResponse.getHeaderGroup();

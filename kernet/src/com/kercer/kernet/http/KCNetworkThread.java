@@ -16,11 +16,7 @@
 
 package com.kercer.kernet.http;
 
-import android.annotation.TargetApi;
-import android.net.TrafficStats;
-import android.os.Build;
 import android.os.Process;
-import android.os.SystemClock;
 
 import java.util.concurrent.BlockingQueue;
 
@@ -28,7 +24,7 @@ import java.util.concurrent.BlockingQueue;
  * Provides a thread for performing network dispatch from a queue of requests.
  *
  * Requests added to the specified queue are processed from the network via a specified {@link KCNetwork} interface. Responses are committed to cache,
- * if eligible, using a specified {@link KCCache} interface. Valid responses and errors are posted back to the caller via a {@link KCDeliveryResponse}.
+ * if eligible, using a specified {@link KCCache} interface. Valid responses and errors are posted back to the caller via a {@link KCDeliveryResult}.
  */
 public class KCNetworkThread extends Thread
 {
@@ -52,7 +48,7 @@ public class KCNetworkThread extends Thread
 	 * @param delivery
 	 *            Delivery interface to use for posting responses
 	 */
-	public KCNetworkThread(BlockingQueue<KCHttpRequest<?>> queue, KCNetwork network, KCCache cache, KCDeliveryResponse delivery)
+	public KCNetworkThread(BlockingQueue<KCHttpRequest<?>> queue, KCNetwork network, KCCache cache, KCDeliveryResult delivery)
 	{
 		mQueue = queue;
 

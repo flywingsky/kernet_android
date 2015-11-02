@@ -28,9 +28,11 @@ public interface KCNetwork
 	 * 
 	 * @param request
 	 *            Request to process
+	 * @param aDelivery
+	 *            delivery
 	 * @return A {@link KCHttpResponse} with data and caching metadata; will never be null
 	 * @throws KCNetError
 	 *             on errors
 	 */
-	public KCHttpResponse performRequest(KCHttpRequest<?> request) throws KCNetError;
+	public KCHttpResponse performRequest(KCHttpRequest<?> request, KCDeliveryHttp aDelivery) throws KCNetError;
 }

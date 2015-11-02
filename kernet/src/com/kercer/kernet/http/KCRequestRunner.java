@@ -30,7 +30,7 @@ public class KCRequestRunner
 	private final KCNetwork mNetwork;
 
 	/** Response delivery mechanism. */
-	private final KCDeliveryResponse mDelivery;
+	private final KCDeliveryResult mDelivery;
 
 	// private KCHttpResult<?> response;
 //	private NetError error;
@@ -45,7 +45,7 @@ public class KCRequestRunner
 	 * @param delivery
 	 *            A ResponseDelivery interface for posting responses and errors
 	 */
-	public KCRequestRunner(KCCache cache, KCNetwork network, KCDeliveryResponse delivery)
+	public KCRequestRunner(KCCache cache, KCNetwork network, KCDeliveryResult delivery)
 	{
 		mCache = cache;
 		mNetwork = network;
@@ -127,7 +127,7 @@ public class KCRequestRunner
 			addTrafficStatsTag(request);
 
 			// Perform the network request.
-			networkResponse = mNetwork.performRequest(mRequest);
+			networkResponse = mNetwork.performRequest(mRequest, mDelivery);
 			mRequest.addMarker("network-http-complete");
 
 			// If the server returned 304 AND we delivered a response already,

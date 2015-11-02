@@ -20,9 +20,9 @@ public class KCCacheRunner
     private final KCCache mCache;
 
     /** For posting responses. */
-    private final KCDeliveryResponse mDelivery;
+    private final KCDeliveryResult mDelivery;
 
-    public KCCacheRunner(BlockingQueue<KCHttpRequest<?>> aNetworkQueue, KCCache aCache, KCDeliveryResponse aDelivery)
+    public KCCacheRunner(BlockingQueue<KCHttpRequest<?>> aNetworkQueue, KCCache aCache, KCDeliveryResult aDelivery)
     {
         mNetworkQueue = aNetworkQueue;
         mCache = aCache;

@@ -18,7 +18,7 @@ package com.kercer.kernet.http;
 
 import com.kercer.kernet.http.error.KCNetError;
 
-public interface KCDeliveryResponse
+public interface KCDeliveryResult extends KCDeliveryHttp
 {
 	/**
 	 * Parses a response from the network or cache and delivers it.

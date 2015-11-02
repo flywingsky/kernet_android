@@ -26,7 +26,7 @@ import java.util.concurrent.BlockingQueue;
  * Provides a thread for performing cache triage on a queue of requests.
  *
  * Requests added to the specified cache queue are resolved from cache. Any deliverable response is posted back to the caller via a
- * {@link KCDeliveryResponse}. Cache misses and responses that require refresh are enqueued on the specified network queue for processing by a
+ * {@link KCDeliveryResult}. Cache misses and responses that require refresh are enqueued on the specified network queue for processing by a
  * {@link KCNetworkThread}.
  */
 public class KCCacheThread extends Thread
@@ -54,7 +54,7 @@ public class KCCacheThread extends Thread
 	 * @param aDelivery
 	 *            Delivery interface to use for posting responses
 	 */
-	public KCCacheThread(BlockingQueue<KCHttpRequest<?>> cacheQueue, BlockingQueue<KCHttpRequest<?>> aNetworkQueue, KCCache aCache, KCDeliveryResponse aDelivery)
+	public KCCacheThread(BlockingQueue<KCHttpRequest<?>> cacheQueue, BlockingQueue<KCHttpRequest<?>> aNetworkQueue, KCCache aCache, KCDeliveryResult aDelivery)
 	{
 		mCacheQueue = cacheQueue;
 		mCacheRunner = new KCCacheRunner(aNetworkQueue, aCache, aDelivery);
