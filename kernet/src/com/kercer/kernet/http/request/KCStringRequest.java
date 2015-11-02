@@ -32,12 +32,12 @@ import java.io.UnsupportedEncodingException;
  */
 public class KCStringRequest extends KCHttpRequest<String>
 {
-	private final KCHttpResultListener<String> mListener;
+	private KCHttpResultListener<String> mListener;
 
 	/**
 	 * Creates a new request with the given method.
 	 *
-	 * @param method
+	 * @param aMethod
 	 *            the request {@link Method} to use
 	 * @param aUrl
 	 *            URL to fetch the string at
@@ -46,9 +46,9 @@ public class KCStringRequest extends KCHttpRequest<String>
 	 * @param aListener
 	 *            listener, or null to ignore errors
 	 */
-	public KCStringRequest(int method, String aUrl, KCHttpResultListener<String> aResultListener, KCHttpListener aListener)
+	public KCStringRequest(int aMethod, String aUrl, KCHttpResultListener<String> aResultListener, KCHttpListener aListener)
 	{
-		super(method, aUrl, aListener);
+		super(aMethod, aUrl, aListener);
 		mListener = aResultListener;
 		parserResponse();
 	}
@@ -68,11 +68,28 @@ public class KCStringRequest extends KCHttpRequest<String>
 		this(Method.GET, aUrl, aResultListener, aListener);
 	}
 
+	public KCStringRequest(int aMethod, String aUrl)
+	{
+		this(aMethod, aUrl, null, null);
+	}
+
+	public KCStringRequest(String aUrl)
+	{
+		this(Method.GET, aUrl, null, null);
+	}
+
+
+	public void setHttpResultListener(KCHttpResultListener<String> aResultListener)
+	{
+		mListener = aResultListener;
+	}
+
 	@Override
 	protected void notifyResponse(KCHttpResponse aResponse, String aResult)
 	{
 		super.notifyResponse(aResponse, aResult);
-		mListener.onHttpResult(aResult);
+		if(mListener != null)
+			mListener.onHttpResult(aResponse, aResult);
 	}
 
     private void parserResponse()

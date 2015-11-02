@@ -16,23 +16,6 @@
 
 package com.kercer.kernet.http;
 
-import com.kercer.kernet.http.error.KCNetError;
-
-/**
- * An interface for performing requests.
- */
-public interface KCNetwork
+public interface KCDelivery extends KCDeliveryResponse, KCDeliveryResult
 {
-	/**
-	 * Performs the specified request.
-	 * 
-	 * @param request
-	 *            Request to process
-	 * @param aDelivery
-	 *            delivery
-	 * @return A {@link KCHttpResponse} with data and caching metadata; will never be null
-	 * @throws KCNetError
-	 *             on errors
-	 */
-	public KCHttpResponse performRequest(KCHttpRequest<?> request, KCDeliveryResponse aDelivery) throws KCNetError;
 }

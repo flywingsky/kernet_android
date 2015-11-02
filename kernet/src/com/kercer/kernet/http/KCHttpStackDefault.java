@@ -113,7 +113,7 @@ public class KCHttpStackDefault implements KCHttpStack
 	}
 
 	@Override
-	public KCHttpResponse performRequest(KCHttpRequest<?> request, KCHeaderGroup additionalHeaders, KCDeliveryHttp aDelivery) throws IOException, KCAuthFailureError
+	public KCHttpResponse performRequest(KCHttpRequest<?> request, KCHeaderGroup additionalHeaders, KCDeliveryResponse aDelivery) throws IOException, KCAuthFailureError
 	{
 		String url = request.getUrl();
 

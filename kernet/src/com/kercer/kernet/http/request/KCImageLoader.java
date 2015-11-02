@@ -289,9 +289,9 @@ public class KCImageLoader
 		return new KCImageRequest(requestUrl, new KCHttpResultListener<Bitmap>()
 		{
 			@Override
-			public void onHttpResult(Bitmap response)
+			public void onHttpResult(KCHttpResponse aResponse, Bitmap aResult)
 			{
-				onGetImageSuccess(cacheKey, response);
+				onGetImageSuccess(cacheKey, aResult);
 			}
 		}, maxWidth, maxHeight, scaleType, Config.RGB_565, new KCHttpListener()
 		{

@@ -64,7 +64,7 @@ public class KCNetworkBasic implements KCNetwork
 	}
 
 	@Override
-	public KCHttpResponse performRequest(KCHttpRequest<?> request, KCDeliveryHttp aDelivery) throws KCNetError
+	public KCHttpResponse performRequest(KCHttpRequest<?> request, KCDeliveryResponse aDelivery) throws KCNetError
 	{
 		long requestStart = SystemClock.elapsedRealtime();
 		while (true)

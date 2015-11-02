@@ -31,7 +31,7 @@ public class KCHttpResult<T>
 	public interface KCHttpResultListener<T>
 	{
 		/** Called when a response is received. */
-		public void onHttpResult(T response);
+		public void onHttpResult(final KCHttpResponse aResponse,final T aResult);
 	}
 
 	/** Returns a successful response containing the parsed result. */

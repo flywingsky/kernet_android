@@ -14,6 +14,7 @@ import com.kercer.kernet.http.KCRequestQueue;
 import com.kercer.kernet.http.KerNet;
 import com.kercer.kernet.http.base.KCHeaderGroup;
 import com.kercer.kernet.http.base.KCLog;
+import com.kercer.kernet.http.base.KCStatusLine;
 import com.kercer.kernet.http.error.KCNetError;
 import com.kercer.kernet.http.request.KCStringRequest;
 import com.kercer.kernet_example.R;
@@ -33,6 +34,11 @@ public class MainActivity extends Activity
         KCHttpRequest<?> request1 = new KCHttpRequest<Object>(KCHttpRequest.Method.GET, "http://www.baidu.com", new KCHttpListener()
         {
             @Override
+            public void onResponseHeaders(KCStatusLine aStatusLine, KCHeaderGroup aHeaderGroup) {
+
+            }
+
+            @Override
             public void onHttpError(KCNetError error)
             {
                 KCLog.e("");
@@ -50,15 +56,20 @@ public class MainActivity extends Activity
 
         KCStringRequest request = new KCStringRequest("http://gdown.baidu.com/data/wisegame/4f9b25fb0e093ac6/QQ_220.apk", new KCHttpResult.KCHttpResultListener<String>()
 		{
-			@Override
-			public void onHttpResult(String response)
-			{
-				// TODO Auto-generated method stub
-				Log.i("kernet", response);
-			}
+            @Override
+            public void onHttpResult(KCHttpResponse aResponse, String aResult) {
+                // TODO Auto-generated method stub
+                Log.i("kernet", aResult);
+            }
+
 		} , new KCHttpListener()
 		{
-			@Override
+            @Override
+            public void onResponseHeaders(KCStatusLine aStatusLine, KCHeaderGroup aHeaderGroup) {
+
+            }
+
+            @Override
 			public void onHttpError(KCNetError error)
 			{
 				// TODO Auto-generated method stub
@@ -73,20 +84,12 @@ public class MainActivity extends Activity
 			}
 		});
 
-        request.setOnProgressListener(new KCHttpListener.KCProgressListener()
-		{
-
+        request.setProgressListener(new KCHttpListener.KCProgressListener() {
             @Override
-            public void onResponseHeaders(KCHeaderGroup aHeaderGroup) {
-
+            public void onProgress(long aCurrent, long aTotal) {
+                KCLog.v(String.format("%d, %d", aCurrent, aTotal));
             }
-
-            @Override
-			public void onProgress(long aCurrent, long aTotal)
-			{
-				KCLog.v(String.format("%d, %d", aCurrent, aTotal));
-			}
-		});
+        });
 
 
 //        String url = "http://gdown.baidu.com/data/wisegame/4f9b25fb0e093ac6/QQ_220.apk";

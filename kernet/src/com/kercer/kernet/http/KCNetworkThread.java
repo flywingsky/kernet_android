@@ -24,7 +24,7 @@ import java.util.concurrent.BlockingQueue;
  * Provides a thread for performing network dispatch from a queue of requests.
  *
  * Requests added to the specified queue are processed from the network via a specified {@link KCNetwork} interface. Responses are committed to cache,
- * if eligible, using a specified {@link KCCache} interface. Valid responses and errors are posted back to the caller via a {@link KCDeliveryResult}.
+ * if eligible, using a specified {@link KCCache} interface. Valid responses and errors are posted back to the caller via a {@link KCDelivery}.
  */
 public class KCNetworkThread extends Thread
 {
@@ -48,7 +48,7 @@ public class KCNetworkThread extends Thread
 	 * @param delivery
 	 *            Delivery interface to use for posting responses
 	 */
-	public KCNetworkThread(BlockingQueue<KCHttpRequest<?>> queue, KCNetwork network, KCCache cache, KCDeliveryResult delivery)
+	public KCNetworkThread(BlockingQueue<KCHttpRequest<?>> queue, KCNetwork network, KCCache cache, KCDelivery delivery)
 	{
 		mQueue = queue;
 

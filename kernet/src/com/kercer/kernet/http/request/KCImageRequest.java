@@ -16,21 +16,21 @@
 
 package com.kercer.kernet.http.request;
 
-import com.kercer.kernet.http.KCRetryPolicyDefault;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory;
+import android.widget.ImageView.ScaleType;
+
 import com.kercer.kernet.http.KCHttpHeaderParser;
 import com.kercer.kernet.http.KCHttpListener;
 import com.kercer.kernet.http.KCHttpRequest;
 import com.kercer.kernet.http.KCHttpResponse;
 import com.kercer.kernet.http.KCHttpResponseParser;
 import com.kercer.kernet.http.KCHttpResult;
+import com.kercer.kernet.http.KCRetryPolicyDefault;
 import com.kercer.kernet.http.base.KCLog;
 import com.kercer.kernet.http.error.KCNetError;
 import com.kercer.kernet.http.error.KCParseError;
-
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
-import android.graphics.BitmapFactory;
-import android.widget.ImageView.ScaleType;
 
 /**
  * A canned request for getting an image at a given URL and calling back with a decoded Bitmap.
@@ -249,7 +249,7 @@ public class KCImageRequest extends KCHttpRequest<Bitmap>
 	@Override
 	protected void notifyResponse(KCHttpResponse aResponse, Bitmap aResult)
 	{
-		mListener.onHttpResult(aResult);
+		mListener.onHttpResult(aResponse, aResult);
 	}
 
 	/**

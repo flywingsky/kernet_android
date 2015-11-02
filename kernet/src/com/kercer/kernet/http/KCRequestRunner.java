@@ -30,7 +30,7 @@ public class KCRequestRunner
 	private final KCNetwork mNetwork;
 
 	/** Response delivery mechanism. */
-	private final KCDeliveryResult mDelivery;
+	private final KCDelivery mDelivery;
 
 	// private KCHttpResult<?> response;
 //	private NetError error;
@@ -45,7 +45,7 @@ public class KCRequestRunner
 	 * @param delivery
 	 *            A ResponseDelivery interface for posting responses and errors
 	 */
-	public KCRequestRunner(KCCache cache, KCNetwork network, KCDeliveryResult delivery)
+	public KCRequestRunner(KCCache cache, KCNetwork network, KCDelivery delivery)
 	{
 		mCache = cache;
 		mNetwork = network;

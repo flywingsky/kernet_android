@@ -27,7 +27,7 @@ import java.util.concurrent.Executor;
 /**
  * Delivers responses and errors.
  */
-public class KCDeliveryExecutor implements KCDeliveryResult
+public class KCDeliveryExecutor implements KCDelivery
 {
 	/** Used for posting responses, typically to the main thread. */
 	private final Executor mExecutor;

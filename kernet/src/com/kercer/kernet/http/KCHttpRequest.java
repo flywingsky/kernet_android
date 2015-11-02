@@ -80,7 +80,7 @@ public abstract class KCHttpRequest<T> implements Comparable<KCHttpRequest<T>>
 	private final int mDefaultTrafficStatsTag;
 
 	/** Listener interface */
-	protected final KCHttpListener mHttpListener;
+	protected KCHttpListener mHttpListener;
 	protected KCHttpListener.KCProgressListener mProgressListener;
 
 	/** Sequence number of this request, used to enforce FIFO ordering. */
@@ -135,6 +135,11 @@ public abstract class KCHttpRequest<T> implements Comparable<KCHttpRequest<T>>
 	public KCHttpRequest(int method, String url, KCHttpListener listener)
 	{
 		this(method, url, listener, null, null);
+	}
+
+	public KCHttpRequest(int method, String url)
+	{
+		this(method, url, null, null, null);
 	}
 
 	/**
@@ -589,6 +594,11 @@ public abstract class KCHttpRequest<T> implements Comparable<KCHttpRequest<T>>
 		}
 	}
 
+
+	public void setListener(KCHttpListener aListener)
+	{
+		mHttpListener = aListener;
+	}
 
 	/**
 	 * @return this request's {@link com.kercer.kernet.http.KCHttpListener}.

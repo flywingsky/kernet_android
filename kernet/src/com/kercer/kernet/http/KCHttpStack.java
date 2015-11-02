@@ -44,6 +44,6 @@ public interface KCHttpStack
 	 *            delivery
 	 * @return the HTTP response
 	 */
-	public KCHttpResponse performRequest(KCHttpRequest<?> aRequest, KCHeaderGroup aAdditionalHeaders, KCDeliveryHttp aDelivery) throws IOException, KCAuthFailureError;
+	public KCHttpResponse performRequest(KCHttpRequest<?> aRequest, KCHeaderGroup aAdditionalHeaders, KCDeliveryResponse aDelivery) throws IOException, KCAuthFailureError;
 
 }

@@ -19,7 +19,6 @@ package com.kercer.kernet.http.request;
 import com.kercer.kernet.http.KCHttpListener;
 import com.kercer.kernet.http.KCHttpRequest;
 import com.kercer.kernet.http.KCHttpResponse;
-import com.kercer.kernet.http.KCHttpResult;
 import com.kercer.kernet.http.KCHttpResult.KCHttpResultListener;
 import com.kercer.kernet.http.base.KCLog;
 
@@ -52,7 +51,7 @@ public abstract class KCJsonRequest<T> extends KCHttpRequest<T> {
 
     @Override
     protected void notifyResponse(KCHttpResponse aResponse, T aResult) {
-        mListener.onHttpResult(aResult);
+        mListener.onHttpResult(aResponse, aResult);
     }
 
     @Override
