@@ -45,7 +45,6 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSocketFactory;
@@ -162,12 +161,9 @@ public class KCHttpStackDefault implements KCHttpStack
 		}
 		KCStatusLine responseStatus = new KCStatusLine(protocolVersion, connection.getResponseCode(), connection.getResponseMessage());
 		KCHttpResponse response = new KCHttpResponse(responseStatus);
-		if (hasResponseBody(request.getMethod(), responseStatus.getStatusCode()))
-		{
-			KCHttpContent content = contentFromConnection(connection, request);
-			response.setContent(content);
-		}
-		for (Entry<String, List<String>> header : connection.getHeaderFields().entrySet())
+
+		//set headers
+		for (Map.Entry<String, List<String>> header : connection.getHeaderFields().entrySet())
 		{
 			if (header.getKey() != null)
 			{
@@ -175,6 +171,15 @@ public class KCHttpStackDefault implements KCHttpStack
 				response.addHeader(h);
 			}
 		}
+
+		request.notifyHeaders(response.getHeaderGroup());
+
+		if (hasResponseBody(request.getMethod(), responseStatus.getStatusCode()))
+		{
+			KCHttpContent content = contentFromConnection(connection, request);
+			response.setContent(content);
+		}
+
 		return response;
 	}
 

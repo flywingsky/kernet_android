@@ -551,6 +551,19 @@ public abstract class KCHttpRequest<T> implements Comparable<KCHttpRequest<T>>
 		return mResponseParser;
 	}
 
+
+	/**
+	 * Receive response headers, callback header group
+	 * @param aHeaderGroup headers
+	 */
+	protected void notifyHeaders(KCHeaderGroup aHeaderGroup)
+	{
+		if (mProgressListener != null)
+		{
+			mProgressListener.onResponseHeaders(aHeaderGroup);
+		}
+	}
+
 	/**
 	 * Subclasses must implement this to perform delivery of the parsed response to their listeners. The given response is guaranteed to be non-null;
 	 * responses that fail to parse are not delivered.

@@ -12,6 +12,7 @@ import com.kercer.kernet.http.KCHttpResponse;
 import com.kercer.kernet.http.KCHttpResult;
 import com.kercer.kernet.http.KCRequestQueue;
 import com.kercer.kernet.http.KerNet;
+import com.kercer.kernet.http.base.KCHeaderGroup;
 import com.kercer.kernet.http.base.KCLog;
 import com.kercer.kernet.http.error.KCNetError;
 import com.kercer.kernet.http.request.KCStringRequest;
@@ -75,7 +76,12 @@ public class MainActivity extends Activity
         request.setOnProgressListener(new KCHttpListener.KCProgressListener()
 		{
 
-			@Override
+            @Override
+            public void onResponseHeaders(KCHeaderGroup aHeaderGroup) {
+
+            }
+
+            @Override
 			public void onProgress(long aCurrent, long aTotal)
 			{
 				KCLog.v(String.format("%d, %d", aCurrent, aTotal));
