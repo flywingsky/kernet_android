@@ -80,7 +80,7 @@ public class KCImageLoader
 
 	/**
 	 * Constructs a new ImageLoader.
-	 * 
+	 *
 	 * @param queue
 	 *            The RequestQueue to use for making image requests.
 	 * @param imageCache
@@ -95,7 +95,7 @@ public class KCImageLoader
 	/**
 	 * The default implementation of ImageListener which handles basic functionality of showing a default image until the network response is
 	 * received, at which point it will switch to either the actual image or the error image.
-	 * 
+	 *
 	 * @param view
 	 *            The imageView that the listener is associated with.
 	 * @param defaultImageResId
@@ -138,7 +138,7 @@ public class KCImageLoader
 			public void onHttpComplete(KCHttpRequest<?> request, KCHttpResponse response)
 			{
 				// TODO Auto-generated method stub
-				
+
 			}
 		};
 	}
@@ -168,7 +168,7 @@ public class KCImageLoader
 
 	/**
 	 * Checks if the item is available in the cache.
-	 * 
+	 *
 	 * @param requestUrl
 	 *            The url of the remote image
 	 * @param maxWidth
@@ -228,7 +228,7 @@ public class KCImageLoader
 	/**
 	 * Issues a bitmap request with the given URL if that image is not available in the cache, and returns a bitmap container that contains all of the
 	 * data relating to the request (as well as the default image if the requested image is not available).
-	 * 
+	 *
 	 * @param requestUrl
 	 *            The url of the remote image
 	 * @param imageListener
@@ -311,7 +311,7 @@ public class KCImageLoader
 			public void onHttpComplete(KCHttpRequest<?> request, KCHttpResponse response)
 			{
 				// TODO Auto-generated method stub
-				
+
 			}
 		});
 	}
@@ -319,7 +319,7 @@ public class KCImageLoader
 	/**
 	 * Sets the amount of time to wait after the first response arrives before delivering all responses. Batching can be disabled entirely by passing
 	 * in 0.
-	 * 
+	 *
 	 * @param newBatchedResponseDelayMs
 	 *            The time in milliseconds to wait.
 	 */
@@ -330,7 +330,7 @@ public class KCImageLoader
 
 	/**
 	 * Handler for when an image was successfully loaded.
-	 * 
+	 *
 	 * @param cacheKey
 	 *            The cache key that is associated with the image request.
 	 * @param response
@@ -356,7 +356,7 @@ public class KCImageLoader
 
 	/**
 	 * Handler for when an image failed to load.
-	 * 
+	 *
 	 * @param cacheKey
 	 *            The cache key that is associated with the image request.
 	 */
@@ -397,7 +397,7 @@ public class KCImageLoader
 
 		/**
 		 * Constructs a BitmapContainer object.
-		 * 
+		 *
 		 * @param bitmap
 		 *            The final bitmap (if it exists).
 		 * @param requestUrl
@@ -483,7 +483,7 @@ public class KCImageLoader
 
 		/**
 		 * Constructs a new BatchedImageRequest object
-		 * 
+		 *
 		 * @param request
 		 *            The request being tracked
 		 * @param container
@@ -521,7 +521,7 @@ public class KCImageLoader
 
 		/**
 		 * Detatches the bitmap container from the request and cancels the request if no one is left listening.
-		 * 
+		 *
 		 * @param container
 		 *            The container to remove from the list
 		 * @return True if the request was canceled, false otherwise.
@@ -540,7 +540,7 @@ public class KCImageLoader
 
 	/**
 	 * Starts the runnable for batched delivery of responses if it is not already started.
-	 * 
+	 *
 	 * @param cacheKey
 	 *            The cacheKey of the response being delivered.
 	 * @param request
@@ -600,7 +600,7 @@ public class KCImageLoader
 
 	/**
 	 * Creates a cache key for use with the L1 cache.
-	 * 
+	 *
 	 * @param url
 	 *            The URL of the request.
 	 * @param maxWidth
@@ -612,6 +612,7 @@ public class KCImageLoader
 	 */
 	private static String getCacheKey(String url, int maxWidth, int maxHeight, ScaleType scaleType)
 	{
-		return new StringBuilder(url.length() + 12).append("#W").append(maxWidth).append("#H").append(maxHeight).append("#S").append(scaleType.ordinal()).append(url).toString();
+		return url;
+//		return new StringBuilder(url.length() + 12).append("#W").append(maxWidth).append("#H").append(maxHeight).append("#S").append(scaleType.ordinal()).append(url).toString();
 	}
 }

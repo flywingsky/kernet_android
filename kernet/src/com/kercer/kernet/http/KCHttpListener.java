@@ -2,9 +2,8 @@ package com.kercer.kernet.http;
 
 import com.kercer.kernet.http.base.KCHeaderGroup;
 import com.kercer.kernet.http.base.KCStatusLine;
-import com.kercer.kernet.http.error.KCNetError;
 
-public interface KCHttpListener
+public interface KCHttpListener extends KCHttpErrorListener
 {
 
 	/**
@@ -13,11 +12,6 @@ public interface KCHttpListener
 	 * @param aHeaderGroup headers
 	 */
 	public void onResponseHeaders(KCStatusLine aStatusLine, KCHeaderGroup aHeaderGroup);
-
-	/**
-	 * Callback method that an error has been occurred with the provided error code and optional user-readable message.
-	 */
-	public void onHttpError(KCNetError error);
 
 	public void onHttpComplete(KCHttpRequest<?> request, KCHttpResponse response);
 

@@ -51,7 +51,8 @@ public abstract class KCJsonRequest<T> extends KCHttpRequest<T> {
 
     @Override
     protected void notifyResponse(KCHttpResponse aResponse, T aResult) {
-        mListener.onHttpResult(aResponse, aResult);
+        if (mListener != null)
+            mListener.onHttpResult(aResponse, aResult);
     }
 
     @Override
