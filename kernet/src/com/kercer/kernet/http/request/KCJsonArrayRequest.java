@@ -16,8 +16,9 @@
 
 package com.kercer.kernet.http.request;
 
+import com.kercer.kernet.http.listener.KCHttpBaseListener;
 import com.kercer.kernet.http.KCHttpHeaderParser;
-import com.kercer.kernet.http.KCHttpListener;
+import com.kercer.kernet.http.listener.KCHttpListener;
 import com.kercer.kernet.http.KCHttpResponse;
 import com.kercer.kernet.http.KCHttpResponseParser;
 import com.kercer.kernet.http.KCHttpResult;
@@ -38,24 +39,24 @@ public class KCJsonArrayRequest extends KCJsonRequest<JSONArray>
 
 	/**
 	 * Creates a new request.
-	 * 
+	 *
 	 * @param url
 	 *            URL to fetch the JSON from
 	 * @param listener
 	 *            Listener to receive the JSON response
-	 * @param errorListener
-	 *            Error listener, or null to ignore errors.
+	 * @param aListener
+	 *            Listener.
 	 */
-	public KCJsonArrayRequest(String url, KCHttpResultListener<JSONArray> listener, KCHttpListener errorListener)
+	public KCJsonArrayRequest(String url, KCHttpResultListener<JSONArray> listener, KCHttpBaseListener aListener)
 	{
-		super(Method.GET, url, null, listener, errorListener);
-		
+		super(Method.GET, url, null, listener, aListener);
+
 		parserResponse();
 	}
 
 	/**
 	 * Creates a new request.
-	 * 
+	 *
 	 * @param method
 	 *            the HTTP method to use
 	 * @param url
@@ -70,7 +71,7 @@ public class KCJsonArrayRequest extends KCJsonRequest<JSONArray>
 	public KCJsonArrayRequest(int method, String url, JSONArray jsonRequest, KCHttpResultListener<JSONArray> listener, KCHttpListener errorListener)
 	{
 		super(method, url, (jsonRequest == null) ? null : jsonRequest.toString(), listener, errorListener);
-		
+
 		parserResponse();
 	}
 
@@ -78,7 +79,7 @@ public class KCJsonArrayRequest extends KCJsonRequest<JSONArray>
     {
     	this.setResponseParser(new KCHttpResponseParser()
 		{
-			
+
 			@Override
 			public KCHttpResult<JSONArray> parseHttpResponse(KCHttpResponse response)
 			{
@@ -96,7 +97,7 @@ public class KCJsonArrayRequest extends KCJsonRequest<JSONArray>
 					return KCHttpResult.error(new KCParseError(je));
 				}
 			}
-			
+
 			@Override
 			public KCNetError parseHttpError(KCNetError aError)
 			{

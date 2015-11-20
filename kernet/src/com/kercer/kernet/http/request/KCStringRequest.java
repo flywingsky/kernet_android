@@ -16,8 +16,8 @@
 
 package com.kercer.kernet.http.request;
 
+import com.kercer.kernet.http.listener.KCHttpBaseListener;
 import com.kercer.kernet.http.KCHttpHeaderParser;
-import com.kercer.kernet.http.KCHttpListener;
 import com.kercer.kernet.http.KCHttpRequest;
 import com.kercer.kernet.http.KCHttpResponse;
 import com.kercer.kernet.http.KCHttpResponseParser;
@@ -46,7 +46,7 @@ public class KCStringRequest extends KCHttpRequest<String>
 	 * @param aListener
 	 *            listener, or null to ignore errors
 	 */
-	public KCStringRequest(int aMethod, String aUrl, KCHttpResultListener<String> aResultListener, KCHttpListener aListener)
+	public KCStringRequest(int aMethod, String aUrl, KCHttpResultListener<String> aResultListener, KCHttpBaseListener aListener)
 	{
 		super(aMethod, aUrl, aListener);
 		mListener = aResultListener;
@@ -63,7 +63,7 @@ public class KCStringRequest extends KCHttpRequest<String>
 	 * @param aListener
 	 *            listener, or null to ignore errors
 	 */
-	public KCStringRequest(String aUrl, KCHttpResultListener<String> aResultListener, KCHttpListener aListener)
+	public KCStringRequest(String aUrl, KCHttpResultListener<String> aResultListener, KCHttpBaseListener aListener)
 	{
 		this(Method.GET, aUrl, aResultListener, aListener);
 	}

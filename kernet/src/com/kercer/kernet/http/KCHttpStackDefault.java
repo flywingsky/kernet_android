@@ -16,7 +16,8 @@
 
 package com.kercer.kernet.http;
 
-import com.kercer.kernet.http.KCHttpListener.KCProgressListener;
+import com.kercer.kernet.http.listener.KCHttpListener;
+import com.kercer.kernet.http.listener.KCHttpListener.KCProgressListener;
 import com.kercer.kernet.http.KCHttpRequest.Method;
 import com.kercer.kernet.http.base.KCHeader;
 import com.kercer.kernet.http.base.KCHeaderGroup;
@@ -350,14 +351,14 @@ public class KCHttpStackDefault implements KCHttpStack
 		{
 			byte[] content = KCUtilIO.inputStreamToBytes(mPool, inputStream, contentLength, new KCUtilIO.KCCopyListener()
 			{
-				
+
 				@Override
 				public boolean onBytesCopied(int aCurrent, int aTotal, byte[] aBytes)
 				{
 					KCHttpListener.KCProgressListener progressListener = request.mProgressListener;
 					if (progressListener != null)
 						progressListener.onProgress(aCurrent, contentLength);
-					
+
 					return true;
 				}
 			});

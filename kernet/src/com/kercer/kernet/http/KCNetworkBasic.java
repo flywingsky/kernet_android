@@ -170,6 +170,7 @@ public class KCNetworkBasic implements KCNetwork
 						httpEntity = new KCHttpContent();
 					}
 					httpEntity.setContent(responseContents);
+					networkResponse.setContent(httpEntity);
 					networkResponse.setHeaders(responseHeaders.getAllHeaders());
 					networkResponse.setNotModified(false);
 					networkResponse.setNetworkTimeMs(SystemClock.elapsedRealtime() - requestStart);

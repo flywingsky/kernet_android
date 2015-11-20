@@ -22,7 +22,7 @@ import android.os.Looper;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
-import com.kercer.kernet.http.KCHttpListener;
+import com.kercer.kernet.http.listener.KCHttpListener;
 import com.kercer.kernet.http.KCHttpRequest;
 import com.kercer.kernet.http.KCHttpResponse;
 import com.kercer.kernet.http.KCRequestQueue;

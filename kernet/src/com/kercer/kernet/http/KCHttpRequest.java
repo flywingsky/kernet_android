@@ -22,7 +22,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 
-import com.kercer.kernet.http.KCHttpListener.KCProgressListener;
+import com.kercer.kernet.http.listener.KCHttpBaseListener;
+import com.kercer.kernet.http.listener.KCHttpErrorListener;
+import com.kercer.kernet.http.listener.KCHttpListener;
+import com.kercer.kernet.http.listener.KCHttpListener.KCProgressListener;
 import com.kercer.kernet.http.base.KCHeader;
 import com.kercer.kernet.http.base.KCHeaderGroup;
 import com.kercer.kernet.http.base.KCLog;
@@ -80,7 +83,7 @@ public abstract class KCHttpRequest<T> implements Comparable<KCHttpRequest<T>>
 	private final int mDefaultTrafficStatsTag;
 
 	/** Listener interface */
-	protected KCHttpListener mHttpListener;
+	protected KCHttpBaseListener mHttpListener;
 	protected KCHttpListener.KCProgressListener mProgressListener;
 
 	/** Sequence number of this request, used to enforce FIFO ordering. */
@@ -120,7 +123,7 @@ public abstract class KCHttpRequest<T> implements Comparable<KCHttpRequest<T>>
 	 * listener is not provided here as delivery of responses is provided by subclasses, who have a better idea of how to deliver an already-parsed
 	 * response.
 	 */
-	public KCHttpRequest(int method, String url, KCHttpListener listener, KCHttpListener.KCProgressListener progressListener, KCRetryPolicy retryPolicy)
+	public KCHttpRequest(int method, String url, KCHttpBaseListener listener, KCHttpListener.KCProgressListener progressListener, KCRetryPolicy retryPolicy)
 	{
 		mMethod = method;
 		mUrl = url;
@@ -132,7 +135,7 @@ public abstract class KCHttpRequest<T> implements Comparable<KCHttpRequest<T>>
 
 	}
 
-	public KCHttpRequest(int method, String url, KCHttpListener listener)
+	public KCHttpRequest(int method, String url, KCHttpBaseListener listener)
 	{
 		this(method, url, listener, null, null);
 	}
@@ -559,7 +562,11 @@ public abstract class KCHttpRequest<T> implements Comparable<KCHttpRequest<T>>
 	{
 		if (mHttpListener != null)
 		{
-			mHttpListener.onResponseHeaders(aStatusLine, aHeaderGroup);
+			if (mHttpListener instanceof KCHttpListener)
+			{
+				KCHttpListener listener = (KCHttpListener)mHttpListener;
+				listener.onResponseHeaders(aStatusLine, aHeaderGroup);
+			}
 		}
 	}
 
@@ -576,7 +583,11 @@ public abstract class KCHttpRequest<T> implements Comparable<KCHttpRequest<T>>
 	{
 		if (mHttpListener != null)
 		{
-			mHttpListener.onHttpComplete(this, aResponse);
+			if (mHttpListener instanceof KCHttpListener)
+			{
+				KCHttpListener listener = (KCHttpListener) mHttpListener;
+				listener.onHttpComplete(this, aResponse);
+			}
 		}
 	}
 
@@ -590,7 +601,11 @@ public abstract class KCHttpRequest<T> implements Comparable<KCHttpRequest<T>>
 	{
 		if (mHttpListener != null)
 		{
-			mHttpListener.onHttpError(error);
+			if (mHttpListener instanceof KCHttpErrorListener)
+			{
+				KCHttpErrorListener listener = (KCHttpErrorListener) mHttpListener;
+				listener.onHttpError(error);
+			}
 		}
 	}
 
@@ -601,9 +616,9 @@ public abstract class KCHttpRequest<T> implements Comparable<KCHttpRequest<T>>
 	}
 
 	/**
-	 * @return this request's {@link com.kercer.kernet.http.KCHttpListener}.
+	 * @return this request's {@link KCHttpListener}.
 	 */
-	public KCHttpListener getListener()
+	public KCHttpBaseListener getListener()
 	{
 		return mHttpListener;
 	}

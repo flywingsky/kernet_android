@@ -1,13 +1,13 @@
 package com.kercer.kernet.http;
 
-import java.util.Locale;
-
 import com.kercer.kernet.http.base.KCHeader;
 import com.kercer.kernet.http.base.KCHeaderGroup;
 import com.kercer.kernet.http.base.KCHttpContent;
 import com.kercer.kernet.http.base.KCProtocolVersion;
 import com.kercer.kernet.http.base.KCReasonPhraseCatalog;
 import com.kercer.kernet.http.base.KCStatusLine;
+
+import java.util.Locale;
 
 public class KCHttpResponse
 {
@@ -16,13 +16,13 @@ public class KCHttpResponse
 	private KCReasonPhraseCatalog reasonCatalog;
 	private Locale locale;
 	protected KCHeaderGroup headergroup;
-	
+
     /** True if the server returned a 304 (Not Modified). */
     protected boolean notModified = false;
 
     /** Network roundtrip time in milliseconds. */
     protected long networkTimeMs = 0;
-    
+
 
 	/**
 	 * Creates a new response. This is the constructor to which all others map.
@@ -45,6 +45,7 @@ public class KCHttpResponse
 		this.reasonCatalog = catalog;
 		this.locale = (locale != null) ? locale : Locale.getDefault();
 		this.headergroup = new KCHeaderGroup();
+		this.mHttpContent = new KCHttpContent();
 	}
 
 	/**
@@ -57,9 +58,9 @@ public class KCHttpResponse
 	{
 		this(statusline, null, null);
 	}
-	
-	
-	
+
+
+
 
 
 	/**
@@ -86,7 +87,7 @@ public class KCHttpResponse
 	{
 		return this.statusline;
 	}
-	
+
 	public int getStatusCode()
 	{
 		return this.statusline != null ? this.statusline.getStatusCode() : -1;
@@ -96,7 +97,7 @@ public class KCHttpResponse
 	{
 		return mHttpContent != null ? mHttpContent.getContent() : null;
 	}
-	
+
 	public KCHttpContent getHttpContent()
 	{
 		return this.mHttpContent;
@@ -187,7 +188,7 @@ public class KCHttpResponse
 	{
 		return this.headergroup;
 	}
-	
+
 	public KCHeader[] getHeaders(final String name)
 	{
 		return this.headergroup.getHeaders(name);
@@ -246,7 +247,7 @@ public class KCHttpResponse
 		this.headergroup.removeHeader(header);
 	}
 
-	
+
 	public void setNotModified(boolean aNotModified)
 	{
 		notModified = aNotModified;
@@ -255,7 +256,7 @@ public class KCHttpResponse
 	{
 		return notModified;
 	}
-	
+
 	public void setNetworkTimeMs(long aNetworkTimeMs)
 	{
 		networkTimeMs = aNetworkTimeMs;
@@ -264,6 +265,6 @@ public class KCHttpResponse
 	{
 		return networkTimeMs;
 	}
-	
-	
+
+
 }

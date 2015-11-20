@@ -16,7 +16,7 @@
 
 package com.kercer.kernet.http.request;
 
-import com.kercer.kernet.http.KCHttpListener;
+import com.kercer.kernet.http.listener.KCHttpBaseListener;
 import com.kercer.kernet.http.KCHttpRequest;
 import com.kercer.kernet.http.KCHttpResponse;
 import com.kercer.kernet.http.KCHttpResult.KCHttpResultListener;
@@ -43,8 +43,8 @@ public abstract class KCJsonRequest<T> extends KCHttpRequest<T> {
 
 
     public KCJsonRequest(int method, String url, String requestBody, KCHttpResultListener<T> listener,
-    		KCHttpListener errorListener) {
-        super(method, url, errorListener);
+    		KCHttpBaseListener aListener) {
+        super(method, url, aListener);
         mListener = listener;
         mRequestBody = requestBody;
     }

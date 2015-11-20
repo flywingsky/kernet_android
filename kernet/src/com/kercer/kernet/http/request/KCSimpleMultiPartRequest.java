@@ -1,7 +1,7 @@
 package com.kercer.kernet.http.request;
 
+import com.kercer.kernet.http.listener.KCHttpBaseListener;
 import com.kercer.kernet.http.KCHttpHeaderParser;
-import com.kercer.kernet.http.KCHttpListener;
 import com.kercer.kernet.http.KCHttpResponse;
 import com.kercer.kernet.http.KCHttpResponseParser;
 import com.kercer.kernet.http.KCHttpResult;
@@ -21,12 +21,12 @@ public class KCSimpleMultiPartRequest extends KCMultiPartRequest<String>
 	 *            the request {@link Method} to use
 	 * @param url
 	 *            URL to fetch the string at
-	 * @param listener
+	 * @param aListener
 	 *            Listener to receive the String response
 	 */
-	public KCSimpleMultiPartRequest(int method, String url, KCHttpListener listener)
+	public KCSimpleMultiPartRequest(int method, String url, KCHttpBaseListener aListener)
 	{
-		super(method, url, listener);
+		super(method, url, aListener);
 
 		this.setResponseParser(new KCHttpResponseParser()
 		{
@@ -59,12 +59,12 @@ public class KCSimpleMultiPartRequest extends KCMultiPartRequest<String>
 	 *
 	 * @param url
 	 *            URL to fetch the string at
-	 * @param listener
+	 * @param aListener
 	 *            Listener to receive the String response
 	 */
-	public KCSimpleMultiPartRequest(String url, KCHttpListener listener)
+	public KCSimpleMultiPartRequest(String url, KCHttpBaseListener aListener)
 	{
-		this(Method.POST, url, listener);
+		this(Method.POST, url, aListener);
 	}
 
 }

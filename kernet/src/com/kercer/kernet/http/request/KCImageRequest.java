@@ -21,8 +21,8 @@ import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.widget.ImageView.ScaleType;
 
+import com.kercer.kernet.http.listener.KCHttpBaseListener;
 import com.kercer.kernet.http.KCHttpHeaderParser;
-import com.kercer.kernet.http.KCHttpListener;
 import com.kercer.kernet.http.KCHttpRequest;
 import com.kercer.kernet.http.KCHttpResponse;
 import com.kercer.kernet.http.KCHttpResponseParser;
@@ -73,19 +73,19 @@ public class KCImageRequest extends KCHttpRequest<Bitmap>
 	 *            The ImageViews ScaleType used to calculate the needed image size.
 	 * @param decodeConfig
 	 *            Format to decode the bitmap to
-	 * @param errorListener
-	 *            Error listener, or null to ignore errors
+	 * @param aListener
+	 *            listener
 	 */
-	public KCImageRequest(String url, KCHttpResult.KCHttpResultListener<Bitmap> listener, int maxWidth, int maxHeight, ScaleType scaleType, Config decodeConfig, KCHttpListener errorListener)
+	public KCImageRequest(String url, KCHttpResult.KCHttpResultListener<Bitmap> listener, int maxWidth, int maxHeight, ScaleType scaleType, Config decodeConfig, KCHttpBaseListener aListener)
 	{
-		super(Method.GET, url, errorListener);
+		super(Method.GET, url, aListener);
 		setRetryPolicy(new KCRetryPolicyDefault(IMAGE_TIMEOUT_MS, IMAGE_MAX_RETRIES, IMAGE_BACKOFF_MULT));
 		mListener = listener;
 		mDecodeConfig = decodeConfig;
 		mMaxWidth = maxWidth;
 		mMaxHeight = maxHeight;
 		mScaleType = scaleType;
-		
+
 		parserResponse();
 	}
 
@@ -159,12 +159,12 @@ public class KCImageRequest extends KCHttpRequest<Bitmap>
 		}
 		return resized;
 	}
-	
+
     private void parserResponse()
     {
     	this.setResponseParser(new KCHttpResponseParser()
 		{
-			
+
 			@Override
 			public KCHttpResult<Bitmap> parseHttpResponse(KCHttpResponse response)
 			{
@@ -182,7 +182,7 @@ public class KCImageRequest extends KCHttpRequest<Bitmap>
 					}
 				}
 			}
-			
+
 			@Override
 			public KCNetError parseHttpError(KCNetError aError)
 			{
@@ -190,7 +190,7 @@ public class KCImageRequest extends KCHttpRequest<Bitmap>
 			}
 		});
     }
-	
+
 
 	/**
 	 * The real guts of parseNetworkResponse. Broken out for readability.

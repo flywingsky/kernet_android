@@ -18,8 +18,8 @@ package com.kercer.kernet.http.request;
 
 import android.text.TextUtils;
 
+import com.kercer.kernet.http.listener.KCHttpBaseListener;
 import com.kercer.kernet.http.KCHttpHeaderParser;
-import com.kercer.kernet.http.KCHttpListener;
 import com.kercer.kernet.http.KCHttpRequest;
 import com.kercer.kernet.http.KCHttpResponse;
 import com.kercer.kernet.http.KCHttpResponseParser;
@@ -45,12 +45,12 @@ public class KCSimpleDownloadRequest extends KCHttpRequest<String>
 	 *            URL to fetch the string at
 	 * @param download_path
 	 *            path to save the file to
-	 * @param listener
+	 * @param aListener
 	 *            Listener to receive the String response
 	 */
-	public KCSimpleDownloadRequest(String url, String download_path, KCHttpListener listener)
+	public KCSimpleDownloadRequest(String url, String download_path, KCHttpBaseListener aListener)
 	{
-		super(Method.GET, url, listener);
+		super(Method.GET, url, aListener);
 		mDownloadPath = download_path;
 		setResponseParser(new KCHttpResponseParser()
 		{

@@ -16,8 +16,8 @@
 
 package com.kercer.kernet.http.request;
 
+import com.kercer.kernet.http.listener.KCHttpBaseListener;
 import com.kercer.kernet.http.KCHttpHeaderParser;
-import com.kercer.kernet.http.KCHttpListener;
 import com.kercer.kernet.http.KCHttpResponse;
 import com.kercer.kernet.http.KCHttpResponseParser;
 import com.kercer.kernet.http.KCHttpResult;
@@ -48,12 +48,12 @@ public class KCJsonObjectRequest extends KCJsonRequest<JSONObject>
 	 *            A {@link JSONObject} to post with the request. Null is allowed and indicates no parameters will be posted along with request.
 	 * @param listener
 	 *            Listener to receive the JSON response
-	 * @param errorListener
-	 *            Error listener, or null to ignore errors.
+	 * @param aListener
+	 *            Listener
 	 */
-	public KCJsonObjectRequest(int method, String url, JSONObject jsonRequest, KCHttpResultListener<JSONObject> listener, KCHttpListener errorListener)
+	public KCJsonObjectRequest(int method, String url, JSONObject jsonRequest, KCHttpResultListener<JSONObject> listener, KCHttpBaseListener aListener)
 	{
-		super(method, url, (jsonRequest == null) ? null : jsonRequest.toString(), listener, errorListener);
+		super(method, url, (jsonRequest == null) ? null : jsonRequest.toString(), listener, aListener);
 		parserResponse();
 	}
 
@@ -63,11 +63,11 @@ public class KCJsonObjectRequest extends KCJsonRequest<JSONObject>
 	 * @param url url
 	 * @param jsonRequest json request
 	 * @param listener listener
-	 * @param errorListener listener
+	 * @param aListener listener
 	 */
-	public KCJsonObjectRequest(String url, JSONObject jsonRequest, KCHttpResultListener<JSONObject> listener, KCHttpListener errorListener)
+	public KCJsonObjectRequest(String url, JSONObject jsonRequest, KCHttpResultListener<JSONObject> listener, KCHttpBaseListener aListener)
 	{
-		this(jsonRequest == null ? Method.GET : Method.POST, url, jsonRequest, listener, errorListener);
+		this(jsonRequest == null ? Method.GET : Method.POST, url, jsonRequest, listener, aListener);
 	}
 
     private void parserResponse()

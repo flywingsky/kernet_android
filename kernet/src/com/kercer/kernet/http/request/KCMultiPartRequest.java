@@ -1,9 +1,9 @@
 package com.kercer.kernet.http.request;
 
-import com.kercer.kernet.http.KCRetryPolicyDefault;
-import com.kercer.kernet.http.KCHttpListener;
+import com.kercer.kernet.http.listener.KCHttpBaseListener;
+import com.kercer.kernet.http.listener.KCHttpListener.KCProgressListener;
 import com.kercer.kernet.http.KCHttpRequest;
-import com.kercer.kernet.http.KCHttpListener.KCProgressListener;
+import com.kercer.kernet.http.KCRetryPolicyDefault;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,13 +30,13 @@ public abstract class KCMultiPartRequest<T> extends KCHttpRequest<T>
 	 *            the request {@link Method} to use
 	 * @param url
 	 *            URL to fetch the string at
-	 * @param listener
+	 * @param aListener
 	 *            Listener to receive the String response
 	 */
-	public KCMultiPartRequest(int method, String url, KCHttpListener listener)
+	public KCMultiPartRequest(int method, String url, KCHttpBaseListener aListener)
 	{
 
-		super(method, url, listener, null, null);
+		super(method, url, aListener, null, null);
 		new KCRetryPolicyDefault(TIMEOUT_MS, KCRetryPolicyDefault.DEFAULT_MAX_RETRIES, KCRetryPolicyDefault.DEFAULT_BACKOFF_MULT);
 		mMultipartParams = new HashMap<String, KCMultiPartRequest.KCMultiPartParam>();
 		mFileUploads = new HashMap<String, String>();
