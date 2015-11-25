@@ -16,8 +16,6 @@
 
 package com.kercer.kernet.http;
 
-import com.kercer.kernet.http.listener.KCHttpListener;
-import com.kercer.kernet.http.listener.KCHttpListener.KCProgressListener;
 import com.kercer.kernet.http.KCHttpRequest.Method;
 import com.kercer.kernet.http.base.KCHeader;
 import com.kercer.kernet.http.base.KCHeaderGroup;
@@ -27,6 +25,7 @@ import com.kercer.kernet.http.base.KCHttpStatus;
 import com.kercer.kernet.http.base.KCProtocolVersion;
 import com.kercer.kernet.http.base.KCStatusLine;
 import com.kercer.kernet.http.error.KCAuthFailureError;
+import com.kercer.kernet.http.listener.KCHttpProgressListener;
 import com.kercer.kernet.http.request.KCMultiPartRequest;
 import com.kercer.kernet.http.request.KCMultiPartRequest.KCMultiPartParam;
 import com.kercer.kernet.io.KCByteArrayPool;
@@ -219,9 +218,6 @@ public class KCHttpStackDefault implements KCHttpStack
 		}
 		// Modified end
 
-		KCProgressListener progressListener;
-		progressListener = (KCProgressListener) request.mProgressListener;
-
 		PrintWriter writer = null;
 		try
 		{
@@ -269,7 +265,7 @@ public class KCHttpStackDefault implements KCHttpStack
 					{
 						out.write(buffer, 0, bufferLength);
 						transferredBytes += bufferLength;
-						progressListener.onProgress(transferredBytes, totalSize);
+						request.notifyProgress(transferredBytes, totalSize);
 					}
 					out.flush(); // Important! Output cannot be closed. Close of
 									// writer will close
@@ -355,9 +351,7 @@ public class KCHttpStackDefault implements KCHttpStack
 				@Override
 				public boolean onBytesCopied(int aCurrent, int aTotal, byte[] aBytes)
 				{
-					KCHttpListener.KCProgressListener progressListener = request.mProgressListener;
-					if (progressListener != null)
-						progressListener.onProgress(aCurrent, contentLength);
+					request.notifyProgress(aCurrent, contentLength);
 
 					return true;
 				}
@@ -476,9 +470,7 @@ public class KCHttpStackDefault implements KCHttpStack
 			connection.addRequestProperty(KCHttpDefine.HEADER_CONTENT_TYPE, request.getBodyContentType());
 			DataOutputStream out = new DataOutputStream(connection.getOutputStream());
 
-			KCHttpListener.KCProgressListener progressListener = request.mProgressListener;
-
-			if (progressListener != null)
+			if (request.mHttpListener instanceof KCHttpProgressListener)
 			{
 				int transferredBytes = 0;
 				int totalSize = body.length;
@@ -488,7 +480,8 @@ public class KCHttpStackDefault implements KCHttpStack
 				{
 					out.write(body, offset, chunkSize);
 					transferredBytes += chunkSize;
-					progressListener.onProgress(transferredBytes, totalSize);
+//					progressListener.onProgress(transferredBytes, totalSize);
+					request.notifyProgress(transferredBytes, totalSize);
 					offset += chunkSize;
 					chunkSize = Math.min(chunkSize, Math.max(totalSize - offset, 0));
 				}

@@ -1,7 +1,6 @@
 package com.kercer.kernet.http.request;
 
 import com.kercer.kernet.http.listener.KCHttpBaseListener;
-import com.kercer.kernet.http.listener.KCHttpListener.KCProgressListener;
 import com.kercer.kernet.http.KCHttpRequest;
 import com.kercer.kernet.http.KCRetryPolicyDefault;
 
@@ -36,7 +35,7 @@ public abstract class KCMultiPartRequest<T> extends KCHttpRequest<T>
 	public KCMultiPartRequest(int method, String url, KCHttpBaseListener aListener)
 	{
 
-		super(method, url, aListener, null, null);
+		super(method, url, aListener, null);
 		new KCRetryPolicyDefault(TIMEOUT_MS, KCRetryPolicyDefault.DEFAULT_MAX_RETRIES, KCRetryPolicyDefault.DEFAULT_BACKOFF_MULT);
 		mMultipartParams = new HashMap<String, KCMultiPartRequest.KCMultiPartParam>();
 		mFileUploads = new HashMap<String, String>();
@@ -76,15 +75,6 @@ public abstract class KCMultiPartRequest<T> extends KCHttpRequest<T>
 		return this;
 	}
 
-	/**
-	 * Set listener for tracking download progress
-	 *
-	 * @param listener listener
-	 */
-	public void setOnProgressListener(KCProgressListener listener)
-	{
-		super.mProgressListener = listener;
-	}
 
 	/**
 	 * A representation of a MultiPart parameter

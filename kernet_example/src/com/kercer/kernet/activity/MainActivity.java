@@ -84,12 +84,12 @@ public class MainActivity extends Activity
 			}
 		});
 
-        request.setProgressListener(new KCHttpListener.KCProgressListener() {
-            @Override
-            public void onProgress(long aCurrent, long aTotal) {
-                KCLog.v(String.format("%d, %d", aCurrent, aTotal));
-            }
-        });
+//        request.setProgressListener(new KCHttpListener.KCProgressListener() {
+//            @Override
+//            public void onProgress(long aCurrent, long aTotal) {
+//                KCLog.v(String.format("%d, %d", aCurrent, aTotal));
+//            }
+//        });
 
 
 //        String url = "http://gdown.baidu.com/data/wisegame/4f9b25fb0e093ac6/QQ_220.apk";
