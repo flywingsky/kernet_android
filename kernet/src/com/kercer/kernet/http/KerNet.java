@@ -41,8 +41,12 @@ public class KerNet
 
 	private static KCCache newCache(Context aContext)
 	{
-		File cacheDir = new File(aContext.getCacheDir(), DEFAULT_CACHE_DIR);
-		KCCache cache = new KCCacheDisk(cacheDir);
+		KCCache cache = null;
+		if (aContext != null)
+		{
+			File cacheDir = new File(aContext.getCacheDir(), DEFAULT_CACHE_DIR);
+			cache = new KCCacheDisk(cacheDir);
+		}
 		return cache;
 	}
 

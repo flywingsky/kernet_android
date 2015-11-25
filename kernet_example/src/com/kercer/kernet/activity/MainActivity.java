@@ -51,7 +51,7 @@ public class MainActivity extends Activity
             }
         }) {
         };
-//        KerNet.newRequestRunner(this).startAsyn(request1);
+        KerNet.newRequestRunner(null).startAsyn(request1);
 
 
         KCStringRequest request = new KCStringRequest("http://gdown.baidu.com/data/wisegame/4f9b25fb0e093ac6/QQ_220.apk", new KCHttpResult.KCHttpResultListener<String>()
@@ -123,7 +123,7 @@ public class MainActivity extends Activity
 //		});
 //
 //        mRequestQueue.add(downloadRequest);
-        mRequestQueue.add(request1);
+//        mRequestQueue.add(request1);
 
 
 
