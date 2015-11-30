@@ -404,7 +404,12 @@ public class KCDownloadTask
 
 	public int getThreadCount()
 	{
-		return mConfigMetaBuffer.get(KCDownloadConfig.CONFIG_META_THREAD_COUNT_INDEX) & 0xff;
+		int count = 1;
+		if (mConfigMetaBuffer != null)
+		{
+			count = mConfigMetaBuffer.get(KCDownloadConfig.CONFIG_META_THREAD_COUNT_INDEX) & 0xff;
+		}
+		return count;
 	}
 
 	private void setStartOffset(int threadIndex, long offset)

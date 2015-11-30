@@ -40,12 +40,15 @@ public class MainActivity extends Activity
         mRequestQueue = KerNet.newRequestQueue(this);
         mDownloadEngine = new KCDownloadEngine("Kernet", 3);
 
+        KCLog.setTag("kernetTest");
 
 
         String urlQQAPK = "http://gdown.baidu.com/data/wisegame/4f9b25fb0e093ac6/QQ_220.apk";
         String urlDek = "http://mob.jz-test.doumi.com/dek/html_1128141111.dek";
 
-        download(urlQQAPK);
+        download(urlDek);
+//        download(urlDek);
+//        download(urlDek);
 
     }
 
@@ -90,7 +93,7 @@ public class MainActivity extends Activity
                     KCLog.d("onError%s", downloadedBytes);
                     e.printStackTrace();
                 }
-            }, false, true);
+            }, true, true);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (URISyntaxException e) {
