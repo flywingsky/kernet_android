@@ -32,19 +32,19 @@ public class KCDownloadEngine
 		HttpURLConnection.setFollowRedirects(false);
 	}
 
-	public KCDownloadTask startDownload(String url, String destFilePath, KCDownloadListener notifier, boolean useResumable, boolean needProgress) throws FileNotFoundException,
+	public KCDownloadTask startDownload(String aUrl, String aDestFilePath, KCDownloadListener aListener, boolean aUseResumable, boolean aNeedProgress) throws FileNotFoundException,
 			URISyntaxException
 	{
-		return createDownloadTask(url, destFilePath, notifier, useResumable, needProgress);
+		return createDownloadTask(aUrl, aDestFilePath, aListener, aUseResumable, aNeedProgress);
 	}
 
-	private KCDownloadTask createDownloadTask(String url, String destFilePath, final KCDownloadListener notifier, final boolean useResumable, final boolean needProgress)
+	private KCDownloadTask createDownloadTask(String aUrl, String aDestFilePath, final KCDownloadListener aListener, final boolean aUseResumable, final boolean aNeedProgress)
 			throws FileNotFoundException, URISyntaxException
 	{
 		URL urlObj = null;
 		try
 		{
-			urlObj = new URL(url);
+			urlObj = new URL(aUrl);
 		}
 		catch (MalformedURLException e)
 		{
@@ -54,14 +54,14 @@ public class KCDownloadEngine
 		if (urlObj == null)
 			return null;
 
-		final KCDownloadTask dt = new KCDownloadTask(this, urlObj, destFilePath, notifier);
+		final KCDownloadTask dt = new KCDownloadTask(this, urlObj, aDestFilePath, aListener);
 
 		getExecutorService().execute(new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				dt.runTask(useResumable, needProgress);
+				dt.runTask(aUseResumable, aNeedProgress);
 			}
 		});
 
@@ -70,26 +70,26 @@ public class KCDownloadEngine
 		return dt;
 	}
 
-	public void startDownload(final KCDownloadTask dt, final boolean useResumable, final boolean needProgress)
+	public void startDownload(final KCDownloadTask aDT, final boolean aUseResumable, final boolean aNeedProgress)
 	{
 		getExecutorService().execute(new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				dt.runTask(useResumable, needProgress);
+				aDT.runTask(aUseResumable, aNeedProgress);
 			}
 		});
 	}
 
-	public ExecutorService getExecutorService()
+	protected ExecutorService getExecutorService()
 	{
 		if (mThreadService == null)
 			mThreadService = Executors.newCachedThreadPool();
 		return mThreadService;
 	}
 
-	public void quit()
+	public void shutdown()
 	{
 		if (mThreadService != null)
 		{

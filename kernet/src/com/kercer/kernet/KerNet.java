@@ -18,6 +18,7 @@ package com.kercer.kernet;
 
 import android.content.Context;
 
+import com.kercer.kernet.download.KCDownloadEngine;
 import com.kercer.kernet.http.KCCache;
 import com.kercer.kernet.http.KCCacheDisk;
 import com.kercer.kernet.http.KCHttpStack;
@@ -113,6 +114,17 @@ public class KerNet
 	public static KCRequestRunner newRequestRunner(Context aContext)
 	{
 		return newRequestRunner(aContext, null);
+	}
+
+	/**
+	 * Creates a default instace of KCDownloadEngine
+	 * @param aUserAgent user agent
+	 * @param aMaxConn max conn
+	 * @return A KCDownloadEngine
+	 */
+	public static KCDownloadEngine newDownloadEngine(final String aUserAgent, final int aMaxConn)
+	{
+		return  new KCDownloadEngine(aUserAgent, aMaxConn);
 	}
 
 }
