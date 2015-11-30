@@ -14,9 +14,18 @@
  * limitations under the License.
  */
 
-package com.kercer.kernet.http;
+package com.kercer.kernet;
 
 import android.content.Context;
+
+import com.kercer.kernet.http.KCCache;
+import com.kercer.kernet.http.KCCacheDisk;
+import com.kercer.kernet.http.KCHttpStack;
+import com.kercer.kernet.http.KCHttpStackDefault;
+import com.kercer.kernet.http.KCNetwork;
+import com.kercer.kernet.http.KCNetworkBasic;
+import com.kercer.kernet.http.KCRequestQueue;
+import com.kercer.kernet.http.KCRequestRunner;
 
 import java.io.File;
 
@@ -79,14 +88,28 @@ public class KerNet
 		return newRequestQueue(aContext, null);
 	}
 
-
-
+	/**
+	 * Creates a default instance of KCRequestRunner and calls startAsyn on it
+	 * @param aContext
+	 * 				A {@link Context} to use for creating the cache dir.
+	 * 				if null, not use cache, else use cache of Default on-disk cache directory
+	 * @param aStack
+	 * 				An {@link KCHttpStack} to use for the network, or null for default.
+	 * @return	A Request Runner
+	 */
 	public static KCRequestRunner newRequestRunner(Context aContext, KCHttpStack aStack)
 	{
 		KCRequestRunner requestRunner = new KCRequestRunner(newCache(aContext), newNetwork(aStack));
 		return requestRunner;
 	}
 
+	/**
+	 * Creates a default instance of KCRequestRunner and calls startAsyn on it
+	 * @param aContext
+	 * 				A {@link Context} to use for creating the cache dir.
+	 * 				if null, not use cache, else use cache of Default on-disk cache directory
+	 * @return A Request Runner
+	 */
 	public static KCRequestRunner newRequestRunner(Context aContext)
 	{
 		return newRequestRunner(aContext, null);

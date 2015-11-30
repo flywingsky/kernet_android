@@ -9,7 +9,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * 
+ *
  * @author zihong
  *
  */
@@ -18,17 +18,17 @@ public class KCDownloadEngine
 	private ExecutorService mThreadService;
 
 	// threads used to concurrently initiate requests
-	public KCDownloadEngine(String userAgent, final int maxConn)
+	public KCDownloadEngine(String aUserAgent, final int aMaxConn)
 	{
 		mThreadService = Executors.newCachedThreadPool();
-		initHttpConnectionProperties(userAgent, maxConn);
+		initHttpConnectionProperties(aUserAgent, aMaxConn);
 	}
 
-	private void initHttpConnectionProperties(String userAgent, final int maxConn)
+	private void initHttpConnectionProperties(String aUserAgent, final int aMaxConn)
 	{
 		System.setProperty("http.keepAlive", "true"); // enabling connection pooling
-		System.setProperty("http.maxConnections", String.valueOf(maxConn));
-		System.setProperty("http.agent", userAgent);
+		System.setProperty("http.maxConnections", String.valueOf(aMaxConn));
+		System.setProperty("http.agent", aUserAgent);
 		HttpURLConnection.setFollowRedirects(false);
 	}
 

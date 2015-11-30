@@ -14,7 +14,7 @@ import com.kercer.kernet.http.KCHttpRequest;
 import com.kercer.kernet.http.KCHttpResponse;
 import com.kercer.kernet.http.KCHttpResult;
 import com.kercer.kernet.http.KCRequestQueue;
-import com.kercer.kernet.http.KerNet;
+import com.kercer.kernet.KerNet;
 import com.kercer.kernet.http.base.KCHeaderGroup;
 import com.kercer.kernet.http.base.KCStatusLine;
 import com.kercer.kernet.http.error.KCNetError;
