@@ -18,6 +18,9 @@ package com.kercer.kernet.http;
 
 //import org.apache.http.HttpResponse;
 
+import com.kercer.kernet.http.KCDeliveryResponse;
+import com.kercer.kernet.http.KCHttpRequest;
+import com.kercer.kernet.http.KCHttpResponse;
 import com.kercer.kernet.http.base.KCHeaderGroup;
 import com.kercer.kernet.http.error.KCAuthFailureError;
 

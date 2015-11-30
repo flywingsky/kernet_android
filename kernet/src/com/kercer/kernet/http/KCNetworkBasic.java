@@ -230,7 +230,7 @@ public class KCNetworkBasic implements KCNetwork
 		request.addMarker(String.format("%s-retry [timeout=%s]", logPrefix, oldTimeout));
 	}
 
-	private void addCacheHeaders(KCHeaderGroup headers, KCCache.KCEntry entry)
+	private void addCacheHeaders(KCHeaderGroup headers, KCEntry entry)
 	{
 		// If there's no cache entry, we're done.
 		if (entry == null)

@@ -16,6 +16,9 @@
 
 package com.kercer.kernet.http;
 
+import com.kercer.kernet.http.KCDeliveryResponse;
+import com.kercer.kernet.http.KCHttpRequest;
+import com.kercer.kernet.http.KCHttpResponse;
 import com.kercer.kernet.http.error.KCNetError;
 
 /**
@@ -25,7 +28,7 @@ public interface KCNetwork
 {
 	/**
 	 * Performs the specified request.
-	 * 
+	 *
 	 * @param request
 	 *            Request to process
 	 * @param aDelivery
