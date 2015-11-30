@@ -18,7 +18,7 @@ package com.kercer.kernet.http;
 
 import android.os.Process;
 
-import com.kercer.kernet.http.base.KCLog;
+import com.kercer.kercore.debug.KCLog;
 
 import java.util.concurrent.BlockingQueue;
 

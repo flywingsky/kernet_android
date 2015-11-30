@@ -16,6 +16,8 @@
 
 package com.kercer.kernet.http;
 
+import com.kercer.kercore.io.KCByteArrayPool;
+import com.kercer.kercore.io.KCUtilIO;
 import com.kercer.kernet.http.KCHttpRequest.Method;
 import com.kercer.kernet.http.base.KCHeader;
 import com.kercer.kernet.http.base.KCHeaderGroup;
@@ -28,8 +30,6 @@ import com.kercer.kernet.http.error.KCAuthFailureError;
 import com.kercer.kernet.http.listener.KCHttpProgressListener;
 import com.kercer.kernet.http.request.KCMultiPartRequest;
 import com.kercer.kernet.http.request.KCMultiPartRequest.KCMultiPartParam;
-import com.kercer.kernet.io.KCByteArrayPool;
-import com.kercer.kernet.io.KCUtilIO;
 
 import java.io.BufferedInputStream;
 import java.io.DataOutputStream;
@@ -345,12 +345,10 @@ public class KCHttpStackDefault implements KCHttpStack
 
 		try
 		{
-			byte[] content = KCUtilIO.inputStreamToBytes(mPool, inputStream, contentLength, new KCUtilIO.KCCopyListener()
-			{
+			byte[] content = KCUtilIO.inputStreamToBytes(mPool, inputStream, contentLength, new KCUtilIO.KCCopyListener() {
 
 				@Override
-				public boolean onBytesCopied(int aCurrent, int aTotal, byte[] aBytes)
-				{
+				public boolean onBytesCopied(int aCurrent, int aTotal, byte[] aBytes) {
 					request.notifyProgress(aCurrent, contentLength);
 
 					return true;

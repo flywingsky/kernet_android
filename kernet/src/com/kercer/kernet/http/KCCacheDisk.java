@@ -18,9 +18,9 @@ package com.kercer.kernet.http;
 
 import android.os.SystemClock;
 
+import com.kercer.kercore.debug.KCLog;
 import com.kercer.kernet.http.base.KCHeader;
 import com.kercer.kernet.http.base.KCHeaderGroup;
-import com.kercer.kernet.http.base.KCLog;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -66,7 +66,7 @@ public class KCCacheDisk implements KCCache
 
 	/**
 	 * Constructs an instance of the DiskBasedCache at the specified directory.
-	 * 
+	 *
 	 * @param rootDirectory
 	 *            The root directory of the cache.
 	 * @param maxCacheSizeInBytes
@@ -80,7 +80,7 @@ public class KCCacheDisk implements KCCache
 
 	/**
 	 * Constructs an instance of the DiskBasedCache at the specified directory using the default maximum cache size of 5MB.
-	 * 
+	 *
 	 * @param rootDirectory
 	 *            The root directory of the cache.
 	 */
@@ -207,7 +207,7 @@ public class KCCacheDisk implements KCCache
 
 	/**
 	 * Invalidates an entry in the cache.
-	 * 
+	 *
 	 * @param key
 	 *            Cache key
 	 * @param fullExpire
@@ -279,7 +279,7 @@ public class KCCacheDisk implements KCCache
 
 	/**
 	 * Creates a pseudo-unique filename for the specified cache key.
-	 * 
+	 *
 	 * @param key
 	 *            The key to generate a file name for.
 	 * @return A pseudo-unique filename.
@@ -302,7 +302,7 @@ public class KCCacheDisk implements KCCache
 
 	/**
 	 * Prunes the cache to fit the amount of bytes specified.
-	 * 
+	 *
 	 * @param neededSpace
 	 *            The amount of bytes we are trying to fit into the cache.
 	 */
@@ -352,7 +352,7 @@ public class KCCacheDisk implements KCCache
 
 	/**
 	 * Puts the entry with the specified key into the cache.
-	 * 
+	 *
 	 * @param key
 	 *            The key to identify the entry by.
 	 * @param entry
@@ -442,7 +442,7 @@ public class KCCacheDisk implements KCCache
 
 		/**
 		 * Instantiates a new CacheHeader object
-		 * 
+		 *
 		 * @param key
 		 *            The key that identifies the cache entry
 		 * @param entry
@@ -462,7 +462,7 @@ public class KCCacheDisk implements KCCache
 
 		/**
 		 * Reads the header off of an InputStream and returns a CacheHeader object.
-		 * 
+		 *
 		 * @param is
 		 *            The InputStream to read from.
 		 * @throws IOException

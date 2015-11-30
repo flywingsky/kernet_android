@@ -7,10 +7,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
 
+import com.kercer.kercore.task.KCTaskExecutor;
 import com.kercer.kernet.http.base.KCProtocolVersion;
 import com.kercer.kernet.http.base.KCStatusLine;
 import com.kercer.kernet.http.error.KCNetError;
-import com.kercer.kernet.task.KCTaskExecutor;
 
 /**
  * A request tickle for single requests.
@@ -88,11 +88,9 @@ public class KCRequestRunner
 	public <T> void startAsyn(final KCHttpRequest<T> request)
 	{
 		this.mRequest = request;
-		KCTaskExecutor.executeTask(new Runnable()
-		{
+		KCTaskExecutor.executeTask(new Runnable() {
 			@Override
-			public void run()
-			{
+			public void run() {
 				start(request);
 			}
 		});

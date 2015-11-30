@@ -21,16 +21,16 @@ import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.widget.ImageView.ScaleType;
 
-import com.kercer.kernet.http.listener.KCHttpBaseListener;
+import com.kercer.kercore.debug.KCLog;
 import com.kercer.kernet.http.KCHttpHeaderParser;
 import com.kercer.kernet.http.KCHttpRequest;
 import com.kercer.kernet.http.KCHttpResponse;
 import com.kercer.kernet.http.KCHttpResponseParser;
 import com.kercer.kernet.http.KCHttpResult;
 import com.kercer.kernet.http.KCRetryPolicyDefault;
-import com.kercer.kernet.http.base.KCLog;
 import com.kercer.kernet.http.error.KCNetError;
 import com.kercer.kernet.http.error.KCParseError;
+import com.kercer.kernet.http.listener.KCHttpBaseListener;
 
 /**
  * A canned request for getting an image at a given URL and calling back with a decoded Bitmap.

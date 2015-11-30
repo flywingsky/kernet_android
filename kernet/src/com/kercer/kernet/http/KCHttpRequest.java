@@ -22,9 +22,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 
+import com.kercer.kercore.debug.KCLog;
 import com.kercer.kernet.http.base.KCHeader;
 import com.kercer.kernet.http.base.KCHeaderGroup;
-import com.kercer.kernet.http.base.KCLog;
 import com.kercer.kernet.http.base.KCStatusLine;
 import com.kercer.kernet.http.error.KCAuthFailureError;
 import com.kercer.kernet.http.error.KCNetError;

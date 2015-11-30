@@ -1,5 +1,7 @@
 package com.kercer.kernet.http.base;
 
+import com.kercer.kercore.buffer.KCCharArrayBuffer;
+
 import java.io.Serializable;
 
 public class KCProtocolVersion implements Serializable, Cloneable

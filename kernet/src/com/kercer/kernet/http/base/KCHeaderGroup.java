@@ -1,5 +1,7 @@
 package com.kercer.kernet.http.base;
 
+import com.kercer.kercore.buffer.KCCharArrayBuffer;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;

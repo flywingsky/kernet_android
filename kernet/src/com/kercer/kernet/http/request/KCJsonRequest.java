@@ -16,11 +16,11 @@
 
 package com.kercer.kernet.http.request;
 
-import com.kercer.kernet.http.listener.KCHttpBaseListener;
+import com.kercer.kercore.debug.KCLog;
 import com.kercer.kernet.http.KCHttpRequest;
 import com.kercer.kernet.http.KCHttpResponse;
 import com.kercer.kernet.http.KCHttpResult.KCHttpResultListener;
-import com.kercer.kernet.http.base.KCLog;
+import com.kercer.kernet.http.listener.KCHttpBaseListener;
 
 import java.io.UnsupportedEncodingException;
 

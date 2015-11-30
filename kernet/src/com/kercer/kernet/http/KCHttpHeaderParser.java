@@ -16,7 +16,7 @@
 
 package com.kercer.kernet.http;
 
-import com.kercer.kernet.http.base.KCDateUtils;
+import com.kercer.kercore.util.KCUtilDate;
 import com.kercer.kernet.http.base.KCHeaderGroup;
 import com.kercer.kernet.http.base.KCHttpDefine;
 
@@ -143,7 +143,7 @@ public class KCHttpHeaderParser
 	public static long parseDateAsEpoch(String dateStr)
 	{
 		// Parse date in RFC1123 format if this header contains one
-		return KCDateUtils.parseDate(dateStr).getTime();
+		return KCUtilDate.parseDate(dateStr).getTime();
 	}
 
 	/**

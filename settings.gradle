@@ -1,2 +1,4 @@
 include ':kernet_example'
 include ':kernet'
+
+//include ':..:kercore_android:kercore' //debug

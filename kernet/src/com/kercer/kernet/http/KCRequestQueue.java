@@ -19,7 +19,7 @@ package com.kercer.kernet.http;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.kercer.kernet.http.base.KCLog;
+import com.kercer.kercore.debug.KCLog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -205,7 +205,7 @@ public class KCRequestQueue
 
 	/**
 	 * Cancels all requests in this queue for which the given filter applies.
-	 * 
+	 *
 	 * @param filter
 	 *            The filtering function to use
 	 */
@@ -244,7 +244,7 @@ public class KCRequestQueue
 
 	/**
 	 * Adds a Request to the dispatch queue.
-	 * 
+	 *
 	 * @param request
 	 *            The request to service
 	 * @return The passed-in request

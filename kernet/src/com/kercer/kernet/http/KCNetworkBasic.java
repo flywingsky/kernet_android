@@ -18,13 +18,13 @@ package com.kercer.kernet.http;
 
 import android.os.SystemClock;
 
+import com.kercer.kercore.debug.KCLog;
 import com.kercer.kernet.http.KCCache.KCEntry;
-import com.kercer.kernet.http.base.KCDateUtils;
+import com.kercer.kercore.util.KCUtilDate;
 import com.kercer.kernet.http.base.KCHeader;
 import com.kercer.kernet.http.base.KCHeaderGroup;
 import com.kercer.kernet.http.base.KCHttpContent;
 import com.kercer.kernet.http.base.KCHttpStatus;
-import com.kercer.kernet.http.base.KCLog;
 import com.kercer.kernet.http.base.KCProtocolVersion;
 import com.kercer.kernet.http.base.KCStatusLine;
 import com.kercer.kernet.http.error.KCAuthFailureError;
@@ -246,7 +246,7 @@ public class KCNetworkBasic implements KCNetwork
 		if (entry.lastModified > 0)
 		{
 			Date refTime = new Date(entry.lastModified);
-			headers.addHeader(new KCHeader("If-Modified-Since", KCDateUtils.formatDate(refTime)));
+			headers.addHeader(new KCHeader("If-Modified-Since", KCUtilDate.formatDate(refTime)));
 		}
 	}
 

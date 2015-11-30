@@ -4,7 +4,7 @@
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-version = "1.0.5"                                                               // #CONFIG# // project version
+version = "1.1.0"                                                               // #CONFIG# // project version
 
 def siteUrl = 'https://github.com/kercer/kernet_android'                        // #CONFIG# // project homepage
 def gitUrl = 'https://github.com/kercer/kernet_android.git'                     // #CONFIG# // project git
@@ -44,38 +44,58 @@ install {
 }
 
 
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
+//afterEvaluate { project ->
 
-task javadoc(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-}
+    task javadoc(type: Javadoc) {
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
+        source = android.sourceSets.main.java.srcDirs
+        classpath += files(android.bootClasspath)
+        classpath += files(project.getConfigurations().getByName('compile').asList())
+//        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+//        include '**/*.java'
+//        exclude '**/BuildConfig.java'
 
-artifacts {
-    archives javadocJar
-    archives sourcesJar
-}
-
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-bintray {
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
-    configurations = ['archives']
-    pkg {
-        repo = "maven"
-        name = "kernet"                                                 // #CONFIG# project name in jcenter
-        websiteUrl = siteUrl
-        vcsUrl = gitUrl
-        licenses = ["Apache-2.0"]
-        publish = true
     }
-}
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+
+    task sourcesJar(type: Jar) {
+        classifier = 'sources'
+        from android.sourceSets.main.java.srcDirs
+//        include '**/*.java'
+
+    }
+
+
+    android.libraryVariants.all { variant ->
+        def name = variant.name.capitalize()
+        task "jar${name}"(type: Jar, dependsOn: variant.javaCompile) {
+            from variant.javaCompile.destinationDir
+        }
+    }
+
+    artifacts {
+//        archives javadocJar
+        archives sourcesJar
+    }
+
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    bintray {
+        user = properties.getProperty("bintray.user")
+        key = properties.getProperty("bintray.apikey")
+        configurations = ['archives']
+        pkg {
+            repo = "maven"
+            name = "kernet"
+            // #CONFIG# project name in jcenter
+            websiteUrl = siteUrl
+            vcsUrl = gitUrl
+            licenses = ["Apache-2.0"]
+            publish = true
+        }
+    }
+//}

@@ -1,5 +1,7 @@
 package com.kercer.kernet.http.base;
 
+import com.kercer.kercore.buffer.KCCharArrayBuffer;
+
 public class KCLineFormatter
 {
 	  /**

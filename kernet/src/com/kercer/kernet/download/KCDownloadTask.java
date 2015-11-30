@@ -2,7 +2,15 @@ package com.kercer.kernet.download;
 
 import android.os.SystemClock;
 
-import java.io.*;
+import com.kercer.kercore.debug.KCLog;
+import com.kercer.kercore.io.KCUtilIO;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.RandomAccessFile;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.ByteBuffer;
@@ -12,13 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import com.kercer.kernet.http.base.KCLog;
-import com.kercer.kernet.io.KCUtilIO;
-
 /**
- * 
+ *
  * @author zihong
- * 
+ *
  * This class implements multithread download
  *
  * == Format of the .cfg file
@@ -50,7 +55,7 @@ public class KCDownloadTask
 	private URL mUrl;
 	private KCDownloadListener mNotifier;
 	private KCDownloadProgressUpdater mDownloadProgressUpdater;
-	
+
 	private KCDownloadConfig mDownloadConfig = new KCDownloadConfig();
 
 	private String mDestFilePath;
@@ -85,13 +90,13 @@ public class KCDownloadTask
 	{
 		this(aEngine, aUrl, aDestFilePath, null, null);
 	}
-	
+
 	public KCDownloadTask(KCDownloadEngine aDownloadEngine, URL aUrl, String aDestFilePath, KCDownloadListener aNotifier) throws FileNotFoundException
 	{
 		this(aDownloadEngine, aUrl, aDestFilePath, aNotifier, null);
 	}
 
-	
+
 	public KCDownloadTask(KCDownloadEngine aDownloadEngine, URL aUrl, String aDestFilePath, KCDownloadListener aNotifier, KCDownloadConfig aDownloadConfig) throws FileNotFoundException
 	{
 		mDownloadEngine = aDownloadEngine;
@@ -159,9 +164,9 @@ public class KCDownloadTask
 			}
 		}
 	}
-	
-	
-	
+
+
+
 	@SuppressWarnings("resource")
 	private void initConfigFileBuffer() throws IOException
 	{
@@ -261,7 +266,7 @@ public class KCDownloadTask
 						// TODO: handle exception
 						e.printStackTrace();
 					}
-					
+
 			}
 
 			KCUtilIO.closeSilently(mConfigFileChannel);
@@ -1021,7 +1026,7 @@ public class KCDownloadTask
 		{
 			return mDownloadConfig.getDownloadSpeedSamplingTimeSpan() / mDownloadConfig.getUpdateProgressInterval() -1;
 		}
-		
+
 		void stopLoop()
 		{
 			running = false;
