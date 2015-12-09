@@ -36,7 +36,7 @@ public class KCRetryPolicyDefault implements KCRetryPolicy
 	private final float mBackoffMultiplier;
 
 	/** The default socket timeout in milliseconds */
-	public static final int DEFAULT_TIMEOUT_MS = 2500;
+	public static final int DEFAULT_TIMEOUT_MS = 10000;
 
 	/** The default number of retries */
 	public static final int DEFAULT_MAX_RETRIES = 1;
@@ -54,7 +54,7 @@ public class KCRetryPolicyDefault implements KCRetryPolicy
 
 	/**
 	 * Constructs a new retry policy.
-	 * 
+	 *
 	 * @param initialTimeoutMs
 	 *            The initial timeout for the policy.
 	 * @param maxNumRetries
@@ -97,7 +97,7 @@ public class KCRetryPolicyDefault implements KCRetryPolicy
 
 	/**
 	 * Prepares for the next retry by applying a backoff to the timeout.
-	 * 
+	 *
 	 * @param error
 	 *            The error code of the last attempt.
 	 */
