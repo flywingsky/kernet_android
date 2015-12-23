@@ -20,4 +20,11 @@ package com.kercer.kernet.http.error;
  * Indicates that the connection or the socket timed out.
  */
 @SuppressWarnings("serial")
-public class KCTimeoutError extends KCNetError { }
+public class KCTimeoutError extends KCNetError
+{
+    @Override
+    public String getMessage()
+    {
+        return "timeout";
+    }
+}

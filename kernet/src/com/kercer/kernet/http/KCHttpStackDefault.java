@@ -26,10 +26,12 @@ import com.kercer.kernet.http.base.KCHttpDefine;
 import com.kercer.kernet.http.base.KCHttpStatus;
 import com.kercer.kernet.http.base.KCProtocolVersion;
 import com.kercer.kernet.http.base.KCStatusLine;
+import com.kercer.kernet.http.cookie.KCCookieManager;
 import com.kercer.kernet.http.error.KCAuthFailureError;
 import com.kercer.kernet.http.listener.KCHttpProgressListener;
 import com.kercer.kernet.http.request.KCMultiPartRequest;
 import com.kercer.kernet.http.request.KCMultiPartRequest.KCMultiPartParam;
+import com.kercer.kernet.uri.KCURI;
 
 import java.io.BufferedInputStream;
 import java.io.DataOutputStream;
@@ -42,6 +44,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -71,7 +74,7 @@ public class KCHttpStackDefault implements KCHttpStack
 	/**
 	 * An interface for transforming URLs before use.
 	 */
-	public interface UrlRewriter
+	public interface KCUrlRewriter
 	{
 		/**
 		 * Returns a URL to use instead of the provided one, or null to indicate this URL should not be used at all.
@@ -79,11 +82,13 @@ public class KCHttpStackDefault implements KCHttpStack
 		public String rewriteUrl(String originalUrl);
 	}
 
-	private final UrlRewriter mUrlRewriter;
+	private final KCUrlRewriter mUrlRewriter;
 	private final SSLSocketFactory mSslSocketFactory;
 	protected final KCByteArrayPool mPool;
 
 	private static int DEFAULT_POOL_SIZE = 4096;
+
+	private static KCCookieManager mCookieManager = new KCCookieManager();
 
 	public KCHttpStackDefault()
 	{
@@ -94,7 +99,7 @@ public class KCHttpStackDefault implements KCHttpStack
 	 * @param urlRewriter
 	 *            Rewriter to use for request URLs
 	 */
-	public KCHttpStackDefault(UrlRewriter urlRewriter)
+	public KCHttpStackDefault(KCUrlRewriter urlRewriter)
 	{
 		this(urlRewriter, null, new KCByteArrayPool(DEFAULT_POOL_SIZE));
 	}
@@ -105,11 +110,12 @@ public class KCHttpStackDefault implements KCHttpStack
 	 * @param sslSocketFactory
 	 *            SSL factory to use for HTTPS connections
 	 */
-	public KCHttpStackDefault(UrlRewriter urlRewriter, SSLSocketFactory sslSocketFactory, KCByteArrayPool pool)
+	public KCHttpStackDefault(KCUrlRewriter urlRewriter, SSLSocketFactory sslSocketFactory, KCByteArrayPool pool)
 	{
 		mUrlRewriter = urlRewriter;
 		mSslSocketFactory = sslSocketFactory;
 		mPool = pool;
+
 	}
 
 	@Override
@@ -128,6 +134,9 @@ public class KCHttpStackDefault implements KCHttpStack
 		}
 		URL parsedUrl = new URL(url);
 		HttpURLConnection connection = openConnection(parsedUrl, request);
+
+		//process request cookies
+		mCookieManager.processRequest(request);
 
 		// add headers
 		KCHeader[] requestHeaders = request.getHeaders().getAllHeaders();
@@ -174,6 +183,14 @@ public class KCHttpStackDefault implements KCHttpStack
 
 		aDelivery.postHeaders(request, responseStatus, response.getHeaderGroup());
 
+		try
+		{
+			mCookieManager.processResponse(response.getHeaderGroup(), KCURI.parse(url));
+		}
+		catch (URISyntaxException e)
+		{
+			e.printStackTrace();
+		}
 
 		if (hasResponseBody(request.getMethod(), responseStatus.getStatusCode()))
 		{
