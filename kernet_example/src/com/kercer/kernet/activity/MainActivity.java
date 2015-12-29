@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.kercer.kercore.debug.KCLog;
+import com.kercer.kercore.task.KCTaskExecutor;
 import com.kercer.kernet.download.KCDownloadEngine;
 import com.kercer.kernet.download.KCDownloadListener;
 import com.kercer.kernet.http.KCHttpRequest;
@@ -43,10 +44,23 @@ public class MainActivity extends Activity
         KCLog.setTag("kernetTest");
 
 
-        String urlQQAPK = "http://gdown.baidu.com/data/wisegame/4f9b25fb0e093ac6/QQ_220.apk";
-        String urlDek = "http://mob.jz-test.doumi.com/dek/html_1128141111.dek";
+        final String urlQQAPK = "http://gdown.baidu.com/data/wisegame/4f9b25fb0e093ac6/QQ_220.apk";
+        final String urlDek = "http://mob.jz-test.doumi.com/dek/html_1128141111.dek";
+        final String urlImage = "http://sta.ganji.com/att/project/app/parttime_job/doumi/banner_compensate.png";
 
-        download(urlDek);
+        for (int i = 0; i< 10; ++i)
+        {
+            int n = i*5000+5000;
+            KCTaskExecutor.scheduleTask(n, new Runnable() {
+                @Override
+                public void run() {
+                    download(urlDek);
+                }
+            });
+
+        }
+//        download(urlImage);
+//        download(urlImage);
 //        download(urlDek);
 //        download(urlDek);
 
