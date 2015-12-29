@@ -219,8 +219,7 @@ public class KCDownloadTask
 			}
 			catch (Exception e)
 			{
-				if (KCLog.DEBUG)
-					e.printStackTrace();
+				e.printStackTrace();
 			}
 		}
 
@@ -390,19 +389,26 @@ public class KCDownloadTask
 	// use 2 bytes to keep the time
 	private void setTotalDownloadTime(int timeInSeconds)
 	{
-		mConfigMetaBuffer.put(KCDownloadConfig.CONFIG_META_DOWNLOAD_TIME_INDEX, (byte) (timeInSeconds >> 8));
-		mConfigMetaBuffer.put(KCDownloadConfig.CONFIG_META_DOWNLOAD_TIME_INDEX + 1, (byte) timeInSeconds);
+		if (mConfigMetaBuffer != null)
+		{
+			mConfigMetaBuffer.put(KCDownloadConfig.CONFIG_META_DOWNLOAD_TIME_INDEX, (byte) (timeInSeconds >> 8));
+			mConfigMetaBuffer.put(KCDownloadConfig.CONFIG_META_DOWNLOAD_TIME_INDEX + 1, (byte) timeInSeconds);
+		}
 	}
 
 	// use 2 bytes to keep the time
 	private int getTotalDownloadTime()
 	{
-		return ((mConfigMetaBuffer.get(KCDownloadConfig.CONFIG_META_DOWNLOAD_TIME_INDEX) << 8) & 0xff00) | (mConfigMetaBuffer.get(KCDownloadConfig.CONFIG_META_DOWNLOAD_TIME_INDEX + 1) & 0xff);
+		if (mConfigMetaBuffer != null)
+			return ((mConfigMetaBuffer.get(KCDownloadConfig.CONFIG_META_DOWNLOAD_TIME_INDEX) << 8) & 0xff00) | (mConfigMetaBuffer.get(KCDownloadConfig.CONFIG_META_DOWNLOAD_TIME_INDEX + 1) & 0xff);
+
+		return -1;
 	}
 
 	private void setThreadCount(int count)
 	{
-		mConfigMetaBuffer.put(KCDownloadConfig.CONFIG_META_THREAD_COUNT_INDEX, (byte) count);
+		if (mConfigMetaBuffer != null)
+			mConfigMetaBuffer.put(KCDownloadConfig.CONFIG_META_THREAD_COUNT_INDEX, (byte) count);
 	}
 
 	public int getThreadCount()

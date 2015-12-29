@@ -56,14 +56,7 @@ public class KCDownloadEngine
 
 		final KCDownloadTask dt = new KCDownloadTask(this, urlObj, aDestFilePath, aListener);
 
-		getExecutorService().execute(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				dt.runTask(aUseResumable, aNeedProgress);
-			}
-		});
+		startDownload(dt,aUseResumable, aNeedProgress);
 
 		// so dt is useless in that case, the reason I design the interface like this is that sometimes I don't need
 		// a KCDownloadTask to use its public methods(stop, resume, cancel)
