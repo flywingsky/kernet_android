@@ -48,7 +48,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
-    compile "com.kercer:kercore:1.0.1"
+    compile "com.kercer:kercore:1.0.2"
 
 //    compile project(':..:kercore_android:kercore') //debug
 }
