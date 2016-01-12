@@ -485,32 +485,45 @@ public class KCDownloadTask
 			if (isStopped())
 				return;
 
-			mDownloadEngine.getExecutorService().execute(new Runnable() {
+			mDownloadEngine.getExecutorService().execute(new Runnable()
+			{
 				@Override
-				public void run() {
-					while (true) {
-						try {
-							while (true) {
+				public void run()
+				{
+					while (true)
+					{
+						try
+						{
+							while (true)
+							{
 								if (KCLog.DEBUG)
 									KCLog.d(">>>>DT download retry: " + mCurRetryCount + ", url: " + mUrl.toString());
-								if (!executeRequest(useResumable)) {
+								if (!executeRequest(useResumable))
+								{
 									mFileLength = mConfigHeaderBuffer.get(KCDownloadConfig.CONFIG_FILE_LENGTH_INDEX);
 									mDownloadedBytes = mFileLength;
 									onComplete(true);
 									break;
-								} else {
+								}
+								else
+								{
 									int statusCode = mHttpConn.getResponseCode();
-									if (statusCode == HttpURLConnection.HTTP_MOVED_TEMP || statusCode == HttpURLConnection.HTTP_MOVED_PERM) {
+									if (statusCode == HttpURLConnection.HTTP_MOVED_TEMP || statusCode == HttpURLConnection.HTTP_MOVED_PERM)
+									{
 										mUrl = new URL(mHttpConn.getHeaderField("Location"));
 										if (KCLog.DEBUG)
 											KCLog.d(">>>>DT redirecting to: " + mUrl.toString());
-									} else {
+									}
+									else
+									{
 										if (KCLog.DEBUG)
 											KCLog.d(">>>>DT status: " + statusCode + ", expect_partial_content: " + mPartialContentExpected);
-										if (statusCode != HttpURLConnection.HTTP_PARTIAL) {
+										if (statusCode != HttpURLConnection.HTTP_PARTIAL)
+										{
 											// we are expecting partial content, while the status code is not 206
 											// so we should retry the connection with the original url
-											if (mPartialContentExpected) {
+											if (mPartialContentExpected)
+											{
 												mUrl = mOrigUrl;
 												throw new KCWrongStatusCodeException();
 											}
@@ -518,13 +531,18 @@ public class KCDownloadTask
 											// the status code is 200, while the Content-Length is 0, this is not 'scientific'
 											// so again, we should retry the connection with the original url if we haven't yet
 											// reach MAX_RETRY_COUNT
-											if (statusCode == HttpURLConnection.HTTP_OK && !initContentLength()) {
+											if (statusCode == HttpURLConnection.HTTP_OK && !initContentLength())
+											{
 												// if Content-Length is absent or equal to 0
 												// we should retry the original URL
 												mUrl = mOrigUrl;
-												if (retry()) {
+												if (retry())
+												{
 													continue;
-												} else { // we reach MAX_RETRY_COUNT
+												}
+												else
+												{
+													// we reach MAX_RETRY_COUNT
 													reportError(KCDownloadWorker.this, new KCZeroContentLengthException());
 													return;
 												}
@@ -540,25 +558,33 @@ public class KCDownloadTask
 
 							handleResponse();
 							break;
-						} catch (KCUnexpectedStatusCodeException e) {
+						}
+						catch (KCUnexpectedStatusCodeException e)
+						{
 							reportError(KCDownloadWorker.this, e);
 							break;
-						} catch (Throwable e) {
+						}
+						catch (Throwable e)
+						{
 							if (KCLog.DEBUG)
 								e.printStackTrace();
 
-							if (e instanceof IOException) {
+							if (e instanceof IOException)
+							{
 								String msg = e.getMessage();
-								if (msg != null) {
+								if (msg != null)
+								{
 									msg = msg.toLowerCase(Locale.getDefault());
 									// oh shit, no free disk space is left
-									if (msg.contains("enospc") || msg.contains("no space")) {
+									if (msg.contains("enospc") || msg.contains("no space"))
+									{
 										reportError(KCDownloadWorker.this, e);
 										break;
 									}
 								}
 							}
-							if (e instanceof KCWrongStatusCodeException) {
+							if (e instanceof KCWrongStatusCodeException)
+							{
 								// WrongStatusCodeException, which means the remote server initially
 								// told us that it supports resumable download, while later it returned
 								// 200 instead of 206, so we will retry at most MAX_RETRY_COUNT times
@@ -566,18 +592,27 @@ public class KCDownloadTask
 								mPartialContentExpected = true;
 							}
 
-							if (!mAborted) { // if the task is NOT manually aborted
-								if (!retry()) { // if we still do NOT reach MAX_RETRY_COUNT
+							if (!mAborted)
+							{
+							 	// if the task is NOT manually aborted
+								if (!retry())
+								{
+									// if we still do NOT reach MAX_RETRY_COUNT
 
-									if (e instanceof KCWrongStatusCodeException) {
+									if (e instanceof KCWrongStatusCodeException)
+									{
 										reportError(KCDownloadWorker.this, e);
-									} else {
+									}
+									else
+									{
 										Exception reachMaxRetryException = new KCReachMaxRetryException(e);
 										reportError(KCDownloadWorker.this, reachMaxRetryException);
 									}
 									break;
 								}
-							} else {
+							}
+							else
+							{
 								break;
 							}
 						}
@@ -589,29 +624,39 @@ public class KCDownloadTask
 					KCUtilIO.closeSilently(mDestRandomAccessFile);
 				}
 
-				private void handleResponse() throws Exception {
+				private void handleResponse() throws Exception
+				{
 					int statusCode = mHttpConn.getResponseCode();
-					if (statusCode == HttpURLConnection.HTTP_OK) {
+					if (statusCode == HttpURLConnection.HTTP_OK)
+					{
 						// oh no, cannot use multithread
 						readFullContent();
-					} else if (statusCode == HttpURLConnection.HTTP_PARTIAL) {
+					}
+					else if (statusCode == HttpURLConnection.HTTP_PARTIAL)
+					{
 						// cool, use multithread
 						handlePartialContent(init && !mInitConfig);
-					} else if (statusCode >= 400 && statusCode < 500) {
+					}
+					else if (statusCode >= 400 && statusCode < 500)
+					{
 						if (KCLog.DEBUG)
 							KCLog.d("unexpected status code, URL: " + mUrl.toString());
 						// client error? probably because of bad URL
 						throw new KCUnexpectedStatusCodeException();
-					} else if (statusCode != 416) { // REQUESTED_RANGE_NOT_SATISFIABLE = 416
+					}
+					else if (statusCode != 416)
+					{ // REQUESTED_RANGE_NOT_SATISFIABLE = 416
 						// this rarely happens, but according to the RFC, we should assume it would happen
 						throw new IOException(statusCode + " " + mHttpConn.getResponseMessage());
 					}
 				}
 
-				private boolean retry() {
+				private boolean retry()
+				{
 					// if the request is not manually aborted by the user, it is most probably
 					// because of network error, so we have to retry~
-					if (++mCurRetryCount <= KCDownloadConfig.MAX_RETRY_COUNT) {
+					if (++mCurRetryCount <= KCDownloadConfig.MAX_RETRY_COUNT)
+					{
 						mRetryWaitMilliseconds = Math.min(KCDownloadConfig.MAX_RETRY_WAIT_TIME, mRetryWaitMilliseconds * 2);
 						SystemClock.sleep(mRetryWaitMilliseconds);
 						// luohh add for test
