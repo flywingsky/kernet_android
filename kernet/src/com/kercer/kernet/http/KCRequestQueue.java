@@ -42,7 +42,7 @@ public class KCRequestQueue
 {
 
 	/** Callback interface for completed requests. */
-	public static interface RequestFinishedListener<T>
+	public static interface KCRequestFinishedListener<T>
 	{
 		/** Called when a request has finished processing. */
 		public void onRequestFinished(KCHttpRequest<T> request);
@@ -92,7 +92,7 @@ public class KCRequestQueue
 	/** The cache dispatcher. */
 	private KCCacheThread mCacheDispatcher;
 
-	private List<RequestFinishedListener> mFinishedListeners = new ArrayList<RequestFinishedListener>();
+	private List<KCRequestFinishedListener> mFinishedListeners = new ArrayList<KCRequestFinishedListener>();
 
 	/**
 	 * Creates the worker pool. Processing will not begin until {@link #start()} is called.
@@ -315,7 +315,7 @@ public class KCRequestQueue
 		}
 		synchronized (mFinishedListeners)
 		{
-			for (RequestFinishedListener<T> listener : mFinishedListeners)
+			for (KCRequestFinishedListener<T> listener : mFinishedListeners)
 			{
 				listener.onRequestFinished(request);
 			}
@@ -341,7 +341,7 @@ public class KCRequestQueue
 		}
 	}
 
-	public <T> void addRequestFinishedListener(RequestFinishedListener<T> listener)
+	public <T> void addRequestFinishedListener(KCRequestFinishedListener<T> listener)
 	{
 		synchronized (mFinishedListeners)
 		{
@@ -352,7 +352,7 @@ public class KCRequestQueue
 	/**
 	 * Remove a RequestFinishedListener. Has no effect if listener was not previously added.
 	 */
-	public <T> void removeRequestFinishedListener(RequestFinishedListener<T> listener)
+	public <T> void removeRequestFinishedListener(KCRequestFinishedListener<T> listener)
 	{
 		synchronized (mFinishedListeners)
 		{
