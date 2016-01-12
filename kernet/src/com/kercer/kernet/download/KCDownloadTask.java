@@ -109,6 +109,12 @@ public class KCDownloadTask
 			mDownloadConfig = aDownloadConfig;
 	}
 
+	//is Download task identity
+	public String getCacheKey()
+	{
+		return mOrigUrl.toString();
+	}
+
 	public KCDownloadListener getDownloadNotifier()
 	{
 		return mNotifier;
@@ -166,7 +172,6 @@ public class KCDownloadTask
 	}
 
 
-
 	@SuppressWarnings("resource")
 	private void initConfigFileBuffer() throws IOException
 	{
@@ -203,7 +208,8 @@ public class KCDownloadTask
 	{
 		if (!force && (mDone || mDownloadedBytes != mFileLength))
 		{
-			KCLog.e("will onComplet");
+			if (KCLog.DEBUG)
+				KCLog.e("will onComplet");
 			return;
 		}
 
@@ -223,6 +229,11 @@ public class KCDownloadTask
 			}
 		}
 
+		if (mDownloadEngine != null)
+		{
+			mDownloadEngine.finish(this);
+		}
+
 		KCUtilIO.closeSilently(mConfigFileChannel);
 		if (mConfigFile != null && mConfigFile.exists())
 			mConfigFile.delete();
@@ -233,10 +244,14 @@ public class KCDownloadTask
 	public void cancel()
 	{
 		stop();
+		if (mDownloadEngine != null)
+		{
+			mDownloadEngine.finish(this);
+		}
 	}
 
 	//you can delete ".cfg"
-	public void stop()
+	private void stop()
 	{
 		synchronized (mControlTaskLock)
 		{
@@ -336,6 +351,11 @@ public class KCDownloadTask
 
 			if (mNotifier != null)
 				mNotifier.onError(mDownloadedBytes, e);
+
+			if (mDownloadEngine != null)
+			{
+				mDownloadEngine.finish(this);
+			}
 		}
 	}
 
