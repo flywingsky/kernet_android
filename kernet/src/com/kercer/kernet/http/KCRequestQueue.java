@@ -41,7 +41,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class KCRequestQueue
 {
 
-	/** Callback interface for completed requests. */
+	/** Callback interface for completed requests.  No matter success or failure*/
 	public static interface KCRequestFinishedListener<T>
 	{
 		/** Called when a request has finished processing. */
