@@ -196,9 +196,9 @@ public class KCRequestQueue
 	}
 
 	/**
-	 * A simple predicate or filter interface for Requests, for use by {@link KCRequestQueue#cancelAll(RequestFilter)}.
+	 * A simple predicate or filter interface for Requests, for use by {@link KCRequestQueue#cancelAll(KCRequestFilter)}.
 	 */
-	public interface RequestFilter
+	public interface KCRequestFilter
 	{
 		public boolean apply(KCHttpRequest<?> request);
 	}
@@ -209,7 +209,7 @@ public class KCRequestQueue
 	 * @param filter
 	 *            The filtering function to use
 	 */
-	public void cancelAll(RequestFilter filter)
+	public void cancelAll(KCRequestFilter filter)
 	{
 		synchronized (mCurrentRequests)
 		{
@@ -232,7 +232,7 @@ public class KCRequestQueue
 		{
 			throw new IllegalArgumentException("Cannot cancelAll with a null tag");
 		}
-		cancelAll(new RequestFilter()
+		cancelAll(new KCRequestFilter()
 		{
 			@Override
 			public boolean apply(KCHttpRequest<?> request)
