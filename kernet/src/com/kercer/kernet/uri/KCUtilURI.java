@@ -1,5 +1,7 @@
 package com.kercer.kernet.uri;
 
+import com.kercer.kercore.util.KCUtilText;
+
 import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.Stack;
@@ -98,7 +100,7 @@ public class KCUtilURI
         Stack<String> output = new Stack<String>();
         String input = new String(aPath);
 
-        while (!input.isEmpty())
+        while (!KCUtilText.isEmpty(input))
         {
             if (input.startsWith("../") || input.startsWith("./"))
             {
@@ -134,7 +136,7 @@ public class KCUtilURI
 
                 String pathSegment = input.substring(0, segmentIndex);
                 input = input.substring(segmentIndex);
-                if (!pathSegment.isEmpty())
+                if (!KCUtilText.isEmpty(pathSegment))
                 {
                     output.push(pathSegment);
                 }

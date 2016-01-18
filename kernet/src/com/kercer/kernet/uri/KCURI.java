@@ -1,5 +1,7 @@
 package com.kercer.kernet.uri;
 
+import com.kercer.kercore.util.KCUtilText;
+
 import java.net.IDN;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -115,7 +117,7 @@ public class KCURI
 
     private static boolean isDefined(String aInput)
     {
-        return (aInput != null && !aInput.isEmpty());
+        return !KCUtilText.isEmpty(aInput);
     }
 
     /**
@@ -127,9 +129,9 @@ public class KCURI
      */
     private static String mergePath(KCURI aBaseURI, KCURI aReferenceURI)
     {
-        String basePath = (aBaseURI.mPath == null || aBaseURI.mPath.isEmpty()) ? "" : aBaseURI.mPath;
+        String basePath = (aBaseURI.mPath == null || KCUtilText.isEmpty(aBaseURI.mPath)) ? "" : aBaseURI.mPath;
 
-        if (!aBaseURI.authority().isEmpty() && basePath.isEmpty())
+        if (!KCUtilText.isEmpty(aBaseURI.authority()) && KCUtilText.isEmpty(basePath))
         {
             basePath = "/";
         }
@@ -343,7 +345,7 @@ public class KCURI
      */
     public KCURI removeParam(String aKey)
     {
-        aKey = (aKey != null && !aKey.isEmpty()) ? aKey : null;
+        aKey = (!KCUtilText.isEmpty(aKey)) ? aKey : null;
         if(aKey != null)
         {
             int count = mQueries.size();
@@ -362,7 +364,7 @@ public class KCURI
 
     public KCURI removeParamAll(String aKey)
     {
-        aKey = (aKey != null && !aKey.isEmpty()) ? aKey : null;
+        aKey = (!KCUtilText.isEmpty(aKey)) ? aKey : null;
         if(aKey != null)
         {
             for (int i = 0; i < mQueries.size(); ++i)
@@ -526,7 +528,7 @@ public class KCURI
         String path = getPath();
         StringBuilder builder = new StringBuilder();
         builder.append(path != null ? path : "");
-        builder.append(!query.isEmpty() ? "?" + query : "");
+        builder.append(!KCUtilText.isEmpty(query) ? "?" + query : "");
         return builder.toString();
     }
 
@@ -541,7 +543,7 @@ public class KCURI
         StringBuilder result = new StringBuilder();
         String userinfo = getUserInfo();
 
-        result.append(userinfo != null && !userinfo.isEmpty() ? userinfo + "@" : "");
+        result.append(userinfo != null && !KCUtilText.isEmpty(userinfo) ? userinfo + "@" : "");
         result.append(mHost != null ? mHost : "");
 
         if (mPort != -1 && mPort != inferredPort())
@@ -766,8 +768,8 @@ public class KCURI
             {
                 throw new URISyntaxException(aUserInfo, "User info is not valid");
             }
-            mUsername = (!parts[0].isEmpty()) ? parts[0] : null;
-            mUserpass = (parts.length > 1 && !parts[1].isEmpty()) ? parts[1] : null;
+            mUsername = (!KCUtilText.isEmpty(parts[0])) ? parts[0] : null;
+            mUserpass = (parts.length > 1 && !KCUtilText.isEmpty(parts[1])) ? parts[1] : null;
         }
     }
 
@@ -864,8 +866,8 @@ public class KCURI
 
     private void parseQuery(String aKey, String aValue)
     {
-        aKey = (aKey != null && !aKey.isEmpty()) ? aKey : null;
-        aValue = (aValue != null && !aValue.isEmpty()) ? aValue : null;
+        aKey = (aKey != null && !KCUtilText.isEmpty(aKey)) ? aKey : null;
+        aValue = (aValue != null && !KCUtilText.isEmpty(aValue)) ? aValue : null;
         if (aKey != null || aValue != null)
         {
             mQueries.add(new KCNameValuePair(aKey, aValue));

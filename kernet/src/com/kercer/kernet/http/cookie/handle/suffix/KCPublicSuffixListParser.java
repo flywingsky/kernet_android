@@ -5,6 +5,7 @@ package com.kercer.kernet.http.cookie.handle.suffix;
  */
 
 import com.kercer.kercore.annotation.KCImmutable;
+import com.kercer.kercore.util.KCUtilText;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -43,7 +44,7 @@ public final class KCPublicSuffixListParser
 		String line;
 		while ((line = r.readLine()) != null)
 		{
-			if (line.isEmpty())
+			if (KCUtilText.isEmpty(line))
 			{
 				continue;
 			}
@@ -98,7 +99,7 @@ public final class KCPublicSuffixListParser
 		String line;
 		while ((line = r.readLine()) != null)
 		{
-			if (line.isEmpty())
+			if (KCUtilText.isEmpty(line))
 			{
 				continue;
 			}
