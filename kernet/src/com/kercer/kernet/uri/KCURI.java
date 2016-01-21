@@ -787,7 +787,11 @@ public class KCURI
         }
         if (sNamedHostPattern.matcher(aHost).matches())
         {
-            String ascii = IDN.toASCII(aHost);
+            String ascii = aHost;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.GINGERBREAD)
+            {
+                ascii = IDN.toASCII(aHost);
+            }
             this.mHost = KCUtilURI.normalize(KCUtilURI.normalizeString(ascii, false), KCUtilURI.REGNAME);
         }
         else if (sIPV6HostPattern.matcher(aHost).matches())

@@ -1,5 +1,7 @@
 package com.kercer.kernet.uri;
 
+import android.os.Build;
+
 import java.net.IDN;
 import java.util.Vector;
 import java.util.regex.Matcher;
@@ -57,7 +59,7 @@ public class KCSimpleIDN
             Vector<String> result = new Vector<String>();
             for (String part : parts)
             {
-                if (isUTF8Label(part))
+                if (isUTF8Label(part) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD)
                 {
                     result.add(IDN.toASCII(part));
                 }
@@ -88,7 +90,7 @@ public class KCSimpleIDN
             Vector<String> result = new Vector<String>();
             for (String part : parts)
             {
-                if (part.startsWith(ACE_PREFIX))
+                if (part.startsWith(ACE_PREFIX) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD)
                 {
                     result.add(IDN.toUnicode(part));
                 }
