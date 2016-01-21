@@ -137,7 +137,7 @@ public class KCClientCookie implements Cloneable, Serializable, KCCookie
 	{
 		if (domain != null)
 		{
-			cookieDomain = domain.toLowerCase(Locale.ROOT);
+			cookieDomain = domain.toLowerCase();
 		}
 		else
 		{

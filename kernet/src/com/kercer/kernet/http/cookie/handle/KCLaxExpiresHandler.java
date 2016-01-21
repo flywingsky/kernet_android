@@ -1,16 +1,15 @@
 package com.kercer.kernet.http.cookie.handle;
 
+import com.kercer.kercore.annotation.KCImmutable;
+import com.kercer.kercore.parser.KCParserCursor;
 import com.kercer.kercore.util.KCUtilArgs;
 import com.kercer.kernet.http.cookie.KCClientCookie;
 import com.kercer.kernet.http.cookie.KCCookie;
 import com.kercer.kernet.http.cookie.KCCookieOrigin;
 import com.kercer.kernet.http.error.KCCookieError;
-import com.kercer.kercore.parser.KCParserCursor;
-import com.kercer.kercore.annotation.KCImmutable;
 
 import java.util.BitSet;
 import java.util.Calendar;
-import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
@@ -140,7 +139,7 @@ public class KCLaxExpiresHandler implements KCCookieHandler
 					if (matcher.matches())
 					{
 						foundMonth = true;
-						month = MONTHS.get(matcher.group(1).toLowerCase(Locale.ROOT));
+						month = MONTHS.get(matcher.group(1).toLowerCase());
 						continue;
 					}
 				}
