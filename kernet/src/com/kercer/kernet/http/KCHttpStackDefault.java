@@ -176,8 +176,12 @@ public class KCHttpStackDefault implements KCHttpStack
 		{
 			if (header.getKey() != null)
 			{
-				KCHeader h = new KCHeader(header.getKey(), header.getValue().get(0));
-				response.addHeader(h);
+				List<String> values = header.getValue();
+				for (String value : values)
+				{
+					KCHeader h = new KCHeader(header.getKey(), value);
+					response.addHeader(h);
+				}
 			}
 		}
 
