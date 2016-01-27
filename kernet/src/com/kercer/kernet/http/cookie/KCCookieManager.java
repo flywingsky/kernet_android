@@ -159,7 +159,7 @@ public class KCCookieManager
 				return;
 			}
 			final KCCookieSpec cookieSpec = getCookieSpec();
-			final List<KCCookie> matchedCookies = getCookies(uri, cookieSpec, mCookieStore);
+			final List<KCCookie> matchedCookies = new ArrayList<>();//getCookies(uri, cookieSpec, mCookieStore);
 
 			try
 			{
@@ -193,7 +193,7 @@ public class KCCookieManager
 							}
 						}
 
-						//remove frome header
+						//remove from header
 						headerGroup.removeHeader(header);
 					}
 					catch (final KCCookieError ex)
@@ -206,6 +206,36 @@ public class KCCookieManager
 			catch (Exception e)
 			{
 				e.printStackTrace();
+			}
+
+			Boolean needCheck = (matchedCookies.size() > 0);
+
+			List<KCCookie> storeCookies = getCookies(uri, cookieSpec, mCookieStore);
+			if(storeCookies != null && storeCookies.size()>0)
+			{
+				for (KCCookie tmpCookie : storeCookies)
+				{
+					if (tmpCookie == null) continue;
+					Boolean tip = true;
+
+					if (needCheck)
+					{
+						for(KCCookie tmpCookie2 : matchedCookies)
+						{
+							if (tmpCookie2 == null) continue;
+							if (tmpCookie2.getName().equalsIgnoreCase(tmpCookie.getName()))
+							{
+								tip = false;
+								break;
+							}
+						}
+					}
+
+					if (tip)
+						matchedCookies.add(tmpCookie);
+				}
+
+//				matchedCookies.addAll(storeCookies);
 			}
 
 			// Generate Cookie request headers
