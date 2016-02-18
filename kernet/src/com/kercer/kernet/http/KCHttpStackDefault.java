@@ -135,6 +135,11 @@ public class KCHttpStackDefault implements KCHttpStack
 		URL parsedUrl = new URL(url);
 		HttpURLConnection connection = openConnection(parsedUrl, request);
 
+		// Workaround for the M release HttpURLConnection not observing the
+		// HttpURLConnection.setFollowRedirects() property.
+		// https://code.google.com/p/android/issues/detail?id=194495
+		connection.setInstanceFollowRedirects(HttpURLConnection.getFollowRedirects());
+
 		//process request cookies
 		mCookieManager.processRequest(request);
 
