@@ -135,11 +135,6 @@ public class KCHttpStackDefault implements KCHttpStack
 		URL parsedUrl = new URL(url);
 		HttpURLConnection connection = openConnection(parsedUrl, request);
 
-		// Workaround for the M release HttpURLConnection not observing the
-		// HttpURLConnection.setFollowRedirects() property.
-		// https://code.google.com/p/android/issues/detail?id=194495
-		connection.setInstanceFollowRedirects(HttpURLConnection.getFollowRedirects());
-
 		//process request cookies
 		mCookieManager.processRequest(request);
 
@@ -397,7 +392,9 @@ public class KCHttpStackDefault implements KCHttpStack
 	 */
 	protected HttpURLConnection createConnection(URL url) throws IOException
 	{
-		return (HttpURLConnection) url.openConnection();
+//		return (HttpURLConnection) url.openConnection();
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		return connection;
 	}
 
 	/**
@@ -411,6 +408,12 @@ public class KCHttpStackDefault implements KCHttpStack
 	{
 		HttpURLConnection connection = createConnection(url);
 
+
+		// Workaround for the M release HttpURLConnection not observing the
+		// HttpURLConnection.setFollowRedirects() property.
+		// https://code.google.com/p/android/issues/detail?id=194495
+		//connection.setInstanceFollowRedirects(HttpURLConnection.getFollowRedirects());
+		connection.setInstanceFollowRedirects(request.getFollowRedirects());
 		int timeoutMs = request.getTimeoutMs();
 		connection.setConnectTimeout(timeoutMs);
 		connection.setReadTimeout(timeoutMs);

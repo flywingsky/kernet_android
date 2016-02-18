@@ -118,6 +118,12 @@ public abstract class KCHttpRequest<T> implements Comparable<KCHttpRequest<T>>
 
 	protected KCHttpResponseParser mResponseParser;
 
+	/**
+	 * Flag to define whether the protocol will automatically follow redirects
+	 * or not. The default value is {@code true}.
+	 */
+	private boolean mFollowRedirects = true;
+
 
 	/**
 	 * Creates a new request with the given method (one of the values from {@link Method}), URL, and error listener. Note that the normal response
@@ -551,6 +557,29 @@ public abstract class KCHttpRequest<T> implements Comparable<KCHttpRequest<T>>
 	public KCHttpResponseParser getResponseParser()
 	{
 		return mResponseParser;
+	}
+
+
+
+	/**
+	 * Returns whether this connection follows redirects.
+	 *
+	 * @return {@code true} if this connection follows redirects, false
+	 *         otherwise.
+	 */
+	public boolean getFollowRedirects() {
+		return mFollowRedirects;
+	}
+
+	/**
+	 * Sets whether this connection follows redirects.
+	 *
+	 * @param aFollowRedirects
+	 *            {@code true} if this connection will follows redirects, false
+	 *            otherwise.
+	 */
+	public void setFollowRedirects(boolean aFollowRedirects) {
+		mFollowRedirects = aFollowRedirects;
 	}
 
 
