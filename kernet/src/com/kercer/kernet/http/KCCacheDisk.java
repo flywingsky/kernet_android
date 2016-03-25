@@ -59,7 +59,7 @@ public class KCCacheDisk implements KCCache
 	private static final int DEFAULT_DISK_USAGE_BYTES = 5 * 1024 * 1024;
 
 	/** High water mark percentage for the cache */
-	private static final float HYSTERESIS_FACTOR = 0.9f;
+	private static final float HYSTERESIS_FACTOR = 0.8f;
 
 	/** Magic number for current version of cache file format. */
 	private static final int CACHE_MAGIC = 0x20150306;
@@ -178,9 +178,21 @@ public class KCCacheDisk implements KCCache
 			try
 			{
 				fis = new BufferedInputStream(new FileInputStream(file));
-				KCCacheHeader entry = KCCacheHeader.readHeader(fis);
-				entry.size = file.length();
-				putEntry(entry.key, entry);
+
+				long fileLength = file.length();
+
+				pruneIfNeeded((int) fileLength);
+
+				if (fileLength < mMaxCacheSizeInBytes)
+				{
+					KCCacheHeader entry = KCCacheHeader.readHeader(fis);
+					entry.size = fileLength;
+					putEntry(entry.key, entry);
+				}
+				else
+				{
+					file.delete();
+				}
 			}
 			catch (IOException e)
 			{
