@@ -194,7 +194,14 @@ public class KCCacheDisk implements KCCache
 					file.delete();
 				}
 			}
-			catch (IOException e)
+			catch (Exception e)
+			{
+				if (file != null)
+				{
+					file.delete();
+				}
+			}
+			catch (OutOfMemoryError outOfMemoryError)
 			{
 				if (file != null)
 				{
