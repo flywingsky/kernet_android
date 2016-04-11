@@ -53,10 +53,10 @@ public class KCDownloadTask
 	private KCDownloadEngine mDownloadEngine;
 	private URL mOrigUrl;
 	private URL mUrl;
-	private KCDownloadListener mNotifier;
+	protected KCDownloadListener mNotifier;
 	private KCDownloadProgressUpdater mDownloadProgressUpdater;
 
-	private KCDownloadConfig mDownloadConfig = new KCDownloadConfig();
+	protected KCDownloadConfig mDownloadConfig = new KCDownloadConfig();
 
 	private String mDestFilePath;
 	private File mConfigFile;
@@ -65,8 +65,8 @@ public class KCDownloadTask
 	private ByteBuffer mConfigMetaBuffer; // the first 8 bytes of the config file
 	private long mLastChunkEndOffset;
 
-	private long mFileLength = -1;
-	private long mDownloadedBytes;
+	protected long mFileLength = -1;
+	protected long mDownloadedBytes;
 
 
 	private List<KCDownloadWorker> mWorkerList = new ArrayList<KCDownloadWorker>();
@@ -154,7 +154,7 @@ public class KCDownloadTask
 				// is a download progress meter needed?
 				if (needProgress)
 				{
-					mDownloadProgressUpdater = new KCDownloadProgressUpdater();
+					mDownloadProgressUpdater = new KCDownloadProgressUpdater(this);
 					if (mNotifier != null)
 						mDownloadProgressUpdater.start();
 				}
@@ -250,7 +250,6 @@ public class KCDownloadTask
 		}
 	}
 
-	//you can delete ".cfg"
 	private void stop()
 	{
 		synchronized (mControlTaskLock)
@@ -1084,98 +1083,5 @@ public class KCDownloadTask
 		private static final long serialVersionUID = 178268877309938933L;
 	}
 
-	class KCDownloadProgressUpdater extends Thread
-	{
 
-		private boolean running = true;
-		private long downloadedByteSampleArr[] = new long[getMaxDownloadedByteArrIndex() + 1];
-		private int slotIndex;
-
-		public int getMaxDownloadedByteArrIndex()
-		{
-			return mDownloadConfig.getDownloadSpeedSamplingTimeSpan() / mDownloadConfig.getUpdateProgressInterval() -1;
-		}
-
-		void stopLoop()
-		{
-			running = false;
-		}
-
-		@Override
-		public void run()
-		{
-			Thread.currentThread().setPriority(MIN_PRIORITY);
-
-			long startTimestamp = System.currentTimeMillis();
-			while (running)
-			{
-				try
-				{
-					Thread.sleep(mDownloadConfig.getUpdateProgressInterval());
-					// we are not ready to propagate the progress, cause we currently haven't
-					// downloaded any bytes, the mDownloadedBytes instance variable is not yet
-					// initialized, which is done in DownloadWorker.initConfig()
-					if (mDownloadedBytes <= 0)
-						continue;
-
-					int speed;
-					if (slotIndex == getMaxDownloadedByteArrIndex())
-					{
-						long totalRead = 0;
-						synchronized (this)
-						{
-							for (int i = 0; i < getMaxDownloadedByteArrIndex(); ++i)
-							{
-								totalRead += downloadedByteSampleArr[i];
-								downloadedByteSampleArr[i] = downloadedByteSampleArr[i + 1];
-							}
-							totalRead += downloadedByteSampleArr[getMaxDownloadedByteArrIndex()];
-							downloadedByteSampleArr[getMaxDownloadedByteArrIndex()] = 0;
-						}
-
-						speed = (int) (totalRead * 1000 / mDownloadConfig.getDownloadSpeedSamplingTimeSpan());
-					}
-					else
-					{
-						long totalRead = 0;
-						for (int i = 0; i <= slotIndex; ++i)
-						{
-							totalRead += downloadedByteSampleArr[i];
-						}
-
-						long tsDelta = System.currentTimeMillis() - startTimestamp;
-						speed = (int) (totalRead * 1000 / tsDelta);
-
-						if (tsDelta > mDownloadConfig.getDownloadSpeedSamplingTimeSpan())
-						{
-							slotIndex = getMaxDownloadedByteArrIndex();
-						}
-						else
-						{
-							slotIndex = (int) (tsDelta / mDownloadConfig.getUpdateProgressInterval());
-						}
-					}
-
-					try
-					{
-						mNotifier.onProgressUpdate(mDownloadedBytes, mFileLength, speed);
-					}
-					catch (Exception e)
-					{
-						if (KCLog.DEBUG)
-							e.printStackTrace();
-					}
-				}
-				catch (Exception e)
-				{
-				}
-			}
-		}
-
-		synchronized void onProgressUpdate(int bytes)
-		{
-			downloadedByteSampleArr[slotIndex] += bytes;
-//			mDownloadedBytes += bytes;
-		}
-	}
 }
