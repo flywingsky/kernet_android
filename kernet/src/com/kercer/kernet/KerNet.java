@@ -127,4 +127,13 @@ public class KerNet
 		return  new KCDownloadEngine(aUserAgent, aMaxConn);
 	}
 
+	private static KCDownloadEngine defaultDownloadEngine = null;
+	public static synchronized KCDownloadEngine defaultDownloadEngine()
+	{
+		if (defaultDownloadEngine == null)
+			return defaultDownloadEngine = KerNet.newDownloadEngine("kernet", 5);
+		else
+			return defaultDownloadEngine;
+	}
+
 }

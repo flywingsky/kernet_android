@@ -9,13 +9,13 @@ import android.view.MenuItem;
 
 import com.kercer.kercore.debug.KCLog;
 import com.kercer.kercore.task.KCTaskExecutor;
+import com.kercer.kernet.KerNet;
 import com.kercer.kernet.download.KCDownloadEngine;
 import com.kercer.kernet.download.KCDownloadListener;
 import com.kercer.kernet.http.KCHttpRequest;
 import com.kercer.kernet.http.KCHttpResponse;
 import com.kercer.kernet.http.KCHttpResult;
 import com.kercer.kernet.http.KCRequestQueue;
-import com.kercer.kernet.KerNet;
 import com.kercer.kernet.http.base.KCHeaderGroup;
 import com.kercer.kernet.http.base.KCStatusLine;
 import com.kercer.kernet.http.error.KCNetError;
@@ -45,21 +45,23 @@ public class MainActivity extends Activity
 
 
         final String urlQQAPK = "http://gdown.baidu.com/data/wisegame/4f9b25fb0e093ac6/QQ_220.apk";
-        final String urlDek = "http://mob.jz-test.doumi.com/dek/html_1128141111.dek";
+        final String urlDek = "http://www.linzihong.com/test/update/html.dek";
         final String urlImage = "http://sta.ganji.com/att/project/app/parttime_job/doumi/banner_compensate.png";
 
-        for (int i = 0; i< 1; ++i)
+        for (int i = 0; i< 10; ++i)
         {
-            int n = i*10000+5000;
-            KCTaskExecutor.scheduleTask(n, new Runnable() {
+            int n = i*1000+5000;
+            KCTaskExecutor.scheduleTask(n, new Runnable()
+            {
                 @Override
-                public void run() {
+                public void run()
+                {
                     download(urlDek);
                 }
             });
 
         }
-//        download(urlImage);
+//        download(urlQQAPK);
 //        download(urlImage);
 //        download(urlDek);
 //        download(urlDek);
@@ -81,6 +83,7 @@ public class MainActivity extends Activity
     {
         String path = urlToPath(aUrl);
         try {
+            new File(path).delete();
             mDownloadEngine.startDownload(aUrl, path, new KCDownloadListener() {
                 @Override
                 public void onPrepare() {

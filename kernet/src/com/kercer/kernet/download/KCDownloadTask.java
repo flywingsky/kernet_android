@@ -586,8 +586,7 @@ public class KCDownloadTask
 						}
 						catch (Throwable e)
 						{
-							if (KCLog.DEBUG)
-								e.printStackTrace();
+							if (KCLog.DEBUG) e.printStackTrace();
 
 							if (e instanceof IOException)
 							{
@@ -614,7 +613,7 @@ public class KCDownloadTask
 
 							if (!mAborted)
 							{
-							 	// if the task is NOT manually aborted
+								// if the task is NOT manually aborted
 								if (!retry())
 								{
 									// if we still do NOT reach MAX_RETRY_COUNT
@@ -659,8 +658,7 @@ public class KCDownloadTask
 					}
 					else if (statusCode >= 400 && statusCode < 500)
 					{
-						if (KCLog.DEBUG)
-							KCLog.d("unexpected status code, URL: " + mUrl.toString());
+						if (KCLog.DEBUG) KCLog.d("unexpected status code, URL: " + mUrl.toString());
 						// client error? probably because of bad URL
 						throw new KCUnexpectedStatusCodeException();
 					}
@@ -693,6 +691,7 @@ public class KCDownloadTask
 		{
 			if (useResumable)
 			{
+				if (mFileLength >0 && mStartByteOffset >= mFileLength) return false;
 				mStartByteOffset = getStartOffset(mThreadIndex);
 				mEndByteOffset = getEndOffset(mThreadIndex);
 				// correct the startByteOffset if it was accidentally set to a number
@@ -915,6 +914,8 @@ public class KCDownloadTask
 						mDestRandomAccessFile.write(buffer, 0, blockSize);
 
 						syncReadBytes(blockSize);
+
+						updateDownloadedBytes(blockSize);
 						// propagate the download progress
 						if (mDownloadProgressUpdater != null)
 							mDownloadProgressUpdater.onProgressUpdate(blockSize);
@@ -927,6 +928,8 @@ public class KCDownloadTask
 					{
 						mDestRandomAccessFile.write(buffer, 0, blockSize);
 						syncReadBytes(blockSize);
+
+						updateDownloadedBytes(blockSize);
 						if (mDownloadProgressUpdater != null)
 							mDownloadProgressUpdater.onProgressUpdate(blockSize);
 					}
@@ -949,7 +952,13 @@ public class KCDownloadTask
 				}
 				else
 				{
-					executeRequest(true);
+					boolean isExecute = executeRequest(true);
+					if(!isExecute)
+					{
+						onComplete(true);
+						break;
+					}
+
 				}
 			}
 		}
@@ -975,6 +984,11 @@ public class KCDownloadTask
 		{
 			mStartByteOffset += total;
 			setStartOffset(mThreadIndex, mStartByteOffset);
+		}
+
+		private void updateDownloadedBytes(long bytes)
+		{
+			mDownloadedBytes += bytes;
 		}
 
 		// for single thread download
@@ -1009,6 +1023,8 @@ public class KCDownloadTask
 					}
 
 					fos.write(buffer, 0, blockSize);
+
+					updateDownloadedBytes(blockSize);
 					if (mDownloadProgressUpdater != null)
 						mDownloadProgressUpdater.onProgressUpdate(blockSize);
 					blockSize = 0;
@@ -1021,6 +1037,8 @@ public class KCDownloadTask
 				if (blockSize > 0)
 				{
 					fos.write(buffer, 0, blockSize);
+
+					updateDownloadedBytes(blockSize);
 					if (mDownloadProgressUpdater != null)
 						mDownloadProgressUpdater.onProgressUpdate(blockSize);
 				}
@@ -1157,7 +1175,7 @@ public class KCDownloadTask
 		synchronized void onProgressUpdate(int bytes)
 		{
 			downloadedByteSampleArr[slotIndex] += bytes;
-			mDownloadedBytes += bytes;
+//			mDownloadedBytes += bytes;
 		}
 	}
 }
