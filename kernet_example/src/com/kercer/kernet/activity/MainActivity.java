@@ -39,7 +39,7 @@ public class MainActivity extends Activity
         setContentView(R.layout.activity_main);
 
         mRequestQueue = KerNet.newRequestQueue(this);
-        mDownloadEngine = new KCDownloadEngine("Kernet", 3);
+        mDownloadEngine = new KCDownloadEngine("Kernet", 8);
 
         KCLog.setTag("kernetTest");
 
@@ -47,10 +47,11 @@ public class MainActivity extends Activity
         final String urlQQAPK = "http://gdown.baidu.com/data/wisegame/4f9b25fb0e093ac6/QQ_220.apk";
         final String urlDek = "http://www.linzihong.com/test/update/html.dek";
         final String urlImage = "http://sta.ganji.com/att/project/app/parttime_job/doumi/banner_compensate.png";
+        final String urlQiyiAPK = "http://111.206.23.3/cdn/qiyiapp/20160407/182642/ap/iqiyi_10258.apk";
 
         for (int i = 0; i< 10; ++i)
         {
-            int n = i*1000+5000;
+            int n = i*2000+5000;
             KCTaskExecutor.scheduleTask(n, new Runnable()
             {
                 @Override
@@ -63,7 +64,7 @@ public class MainActivity extends Activity
         }
 //        download(urlQQAPK);
 //        download(urlImage);
-//        download(urlDek);
+//        download(urlQiyiAPK);
 //        download(urlDek);
 
     }
@@ -79,15 +80,16 @@ public class MainActivity extends Activity
         return path;
     }
 
-    public void download(String aUrl)
+    public void download(final String aUrl)
     {
-        String path = urlToPath(aUrl);
+        final String path = urlToPath(aUrl);
         try {
-            new File(path).delete();
+
             mDownloadEngine.startDownload(aUrl, path, new KCDownloadListener() {
                 @Override
                 public void onPrepare() {
-                    KCLog.d("onPrepare");
+                    KCLog.d("onPrepare:%s", aUrl);
+                    new File(path).delete();
                 }
 
                 @Override
