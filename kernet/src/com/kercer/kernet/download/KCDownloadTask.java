@@ -160,7 +160,7 @@ public class KCDownloadTask
 			catch (Exception e)
 			{
 				if (KCLog.DEBUG)
-					e.printStackTrace();
+					KCLog.e(e);
 				reportError(worker, e);
 			}
 		}
@@ -220,7 +220,7 @@ public class KCDownloadTask
 			}
 			catch (Exception e)
 			{
-				e.printStackTrace();
+				KCLog.e(e);
 			}
 		}
 
@@ -275,7 +275,7 @@ public class KCDownloadTask
 						conn.disconnect();
 					}catch (Exception e) {
 						// TODO: handle exception
-						e.printStackTrace();
+						KCLog.e(e);
 					}
 
 			}

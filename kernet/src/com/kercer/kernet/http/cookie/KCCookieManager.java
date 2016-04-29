@@ -1,5 +1,6 @@
 package com.kercer.kernet.http.cookie;
 
+import com.kercer.kercore.debug.KCLog;
 import com.kercer.kercore.util.KCUtilArgs;
 import com.kercer.kernet.http.KCHttpRequest;
 import com.kercer.kernet.http.base.KCHeader;
@@ -65,13 +66,13 @@ public class KCCookieManager
 					}
 					catch (final KCCookieError ex)
 					{
-						ex.printStackTrace();
+						KCLog.e(ex);
 					}
 				}
 			}
 			catch (final KCCookieError ex)
 			{
-				ex.printStackTrace();
+				KCLog.e(ex);
 			}
 		}
 	}
@@ -189,7 +190,7 @@ public class KCCookieManager
 							}
 							catch (final KCCookieError ex)
 							{
-								ex.printStackTrace();
+								KCLog.e(ex);
 							}
 						}
 
@@ -198,14 +199,14 @@ public class KCCookieManager
 					}
 					catch (final KCCookieError ex)
 					{
-						ex.printStackTrace();
+						KCLog.e(ex);
 					}
 				}
 
 			}
 			catch (Exception e)
 			{
-				e.printStackTrace();
+				KCLog.e(e);
 			}
 
 			Boolean needCheck = (matchedCookies.size() > 0);
@@ -250,7 +251,7 @@ public class KCCookieManager
 		}
 		catch (final URISyntaxException e)
 		{
-			e.printStackTrace();
+			KCLog.e(e);
 		}
 
 	}

@@ -110,13 +110,13 @@ public class MainActivity extends Activity
                 @Override
                 public void onError(long downloadedBytes, Throwable e) {
                     KCLog.d("onError%s", downloadedBytes);
-                    e.printStackTrace();
+                    KCLog.e(e);
                 }
             }, true, true);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            KCLog.e(e);
         } catch (URISyntaxException e) {
-            e.printStackTrace();
+            KCLog.e(e);
         }
     }
 

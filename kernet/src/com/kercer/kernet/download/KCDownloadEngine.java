@@ -62,7 +62,7 @@ public class KCDownloadEngine
 		}
 		catch (MalformedURLException e)
 		{
-			e.printStackTrace();
+			KCLog.e(e);
 		}
 
 		if (urlObj == null)

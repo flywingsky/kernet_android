@@ -16,6 +16,7 @@
 
 package com.kercer.kernet.http;
 
+import com.kercer.kercore.debug.KCLog;
 import com.kercer.kercore.io.KCByteArrayPool;
 import com.kercer.kercore.io.KCUtilIO;
 import com.kercer.kernet.http.KCHttpRequest.Method;
@@ -193,7 +194,7 @@ public class KCHttpStackDefault implements KCHttpStack
 		}
 		catch (URISyntaxException e)
 		{
-			e.printStackTrace();
+			KCLog.e(e);
 		}
 
 		if (hasResponseBody(request.getMethod(), responseStatus.getStatusCode()))
@@ -301,7 +302,7 @@ public class KCHttpStackDefault implements KCHttpStack
 						}
 						catch (IOException ex)
 						{
-							ex.printStackTrace();
+							KCLog.e(ex);
 						}
 				}
 				writer.append(CRLF).flush(); // CRLF is important! It indicates
@@ -315,7 +316,7 @@ public class KCHttpStackDefault implements KCHttpStack
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			KCLog.e(e);
 
 		}
 		finally
@@ -379,7 +380,7 @@ public class KCHttpStackDefault implements KCHttpStack
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			KCLog.e(e);
 		}
 		entity.setContentLength(contentLength);
 		entity.setContentEncoding(connection.getContentEncoding());

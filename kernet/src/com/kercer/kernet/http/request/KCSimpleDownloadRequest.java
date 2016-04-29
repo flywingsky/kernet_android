@@ -3,6 +3,7 @@ package com.kercer.kernet.http.request;
 
 import android.text.TextUtils;
 
+import com.kercer.kercore.debug.KCLog;
 import com.kercer.kernet.http.listener.KCHttpBaseListener;
 import com.kercer.kernet.http.KCHttpHeaderParser;
 import com.kercer.kernet.http.KCHttpRequest;
@@ -59,11 +60,11 @@ public class KCSimpleDownloadRequest extends KCHttpRequest<String>
 				}
 				catch (FileNotFoundException e)
 				{
-					e.printStackTrace();
+					KCLog.e(e);
 				}
 				catch (IOException e)
 				{
-					e.printStackTrace();
+					KCLog.e(e);
 				}
 				finally
 				{

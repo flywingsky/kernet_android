@@ -112,7 +112,7 @@ class KCDownloadProgressUpdater extends Thread
                 catch (Exception e)
                 {
                     if (KCLog.DEBUG)
-                        e.printStackTrace();
+                        KCLog.e(e);
                 }
             }
             catch (Exception e)

@@ -140,7 +140,6 @@ class KCDownloadWorker
                     }
                     catch (Throwable e)
                     {
-                        if (KCLog.DEBUG) e.printStackTrace();
 
                         if (e instanceof IOException)
                         {
@@ -360,7 +359,7 @@ class KCDownloadWorker
         catch (Exception e)
         {
             if (KCLog.DEBUG)
-                e.printStackTrace();
+                KCLog.e(e);
         }
     }
 
