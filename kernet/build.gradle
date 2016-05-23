@@ -1,5 +1,7 @@
 apply plugin: 'com.android.library'
 
+version = '1.2.5'
+
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
@@ -8,7 +10,7 @@ android {
         minSdkVersion 8
         targetSdkVersion 19
         versionCode 1
-        versionName "1.2.4"
+        versionName version
     }
 
     buildTypes {
@@ -48,7 +50,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
-    compile "com.kercer:kercore:1.0.5"
+    compile "com.kercer:kercore:1.0.6"
 
 //    compile project(':..:kercore_android:kercore') //debug
 }
