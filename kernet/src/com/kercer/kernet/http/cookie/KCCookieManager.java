@@ -260,4 +260,14 @@ public class KCCookieManager
 	{
 		return mCookieSpecProvider.create();
 	}
+
+	public KCCookieStore getCookieStore()
+	{
+		return mCookieStore;
+	}
+
+	public List<KCHeader> cookiesToHeaders(final List<KCCookie> aCookies)
+	{
+		return getCookieSpec().cookiesToHeaders(aCookies);
+	}
 }

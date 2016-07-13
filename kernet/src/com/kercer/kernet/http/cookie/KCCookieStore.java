@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by zihong on 15/12/16.
@@ -22,10 +23,14 @@ public class KCCookieStore implements Serializable
 	@KCGuardedBy("this")
 	private final TreeSet<KCCookie> cookies;
 
+	// use ReentrantLock instead of syncronized for scalability
+	private ReentrantLock lock = null;
+
 	public KCCookieStore()
 	{
 		super();
 		this.cookies = new TreeSet<KCCookie>(new KCCookieComparatorIdentity());
+		lock = new ReentrantLock(false);
 	}
 
 	/**
@@ -38,16 +43,24 @@ public class KCCookieStore implements Serializable
 	 * @see #addCookies(KCCookie[])
 	 *
 	 */
-	public synchronized void addCookie(final KCCookie cookie)
+	public void addCookie(final KCCookie cookie)
 	{
-		if (cookie != null)
+		lock.lock();
+		try
 		{
-			// first remove any old cookie that is equivalent
-			cookies.remove(cookie);
-			if (!cookie.isExpired(new Date()))
+			if (cookie != null)
 			{
-				cookies.add(cookie);
+				// first remove any old cookie that is equivalent
+				cookies.remove(cookie);
+				if (!cookie.isExpired(new Date()))
+				{
+					cookies.add(cookie);
+				}
 			}
+		}
+		finally
+		{
+			lock.unlock();
 		}
 	}
 
@@ -61,15 +74,24 @@ public class KCCookieStore implements Serializable
 	 * @see #addCookie(KCCookie)
 	 *
 	 */
-	public synchronized void addCookies(final KCCookie[] cookies)
+	public void addCookies(final KCCookie[] cookies)
 	{
-		if (cookies != null)
+		lock.lock();
+		try
 		{
-			for (final KCCookie cooky : cookies)
+			if (cookies != null)
 			{
-				this.addCookie(cooky);
+				for (final KCCookie cooky : cookies)
+				{
+					this.addCookie(cooky);
+				}
 			}
 		}
+		finally
+		{
+			lock.unlock();
+		}
+
 	}
 
 	/**
@@ -77,10 +99,46 @@ public class KCCookieStore implements Serializable
 	 *
 	 * @return an array of {@link KCCookie cookies}.
 	 */
-	public synchronized List<KCCookie> getCookies()
+	public List<KCCookie> getCookies()
 	{
-		// create defensive copy so it won't be concurrently modified
-		return new ArrayList<KCCookie>(cookies);
+		List<KCCookie> list;
+		lock.lock();
+		try
+		{
+			// create defensive copy so it won't be concurrently modified
+			list = new ArrayList<KCCookie>(cookies);
+		}
+		finally
+		{
+			lock.unlock();
+		}
+		return list;
+	}
+
+
+	/**
+	 * Remove a cookie from store
+	 */
+	public boolean remove(KCCookie cookie)
+	{
+		// argument can't be null
+		if (cookie == null)
+		{
+			throw new NullPointerException("cookie is null");
+		}
+
+		boolean modified = false;
+		lock.lock();
+		try
+		{
+			modified = cookies.remove(cookie);
+		}
+		finally
+		{
+			lock.unlock();
+		}
+
+		return modified;
 	}
 
 	/**
@@ -90,30 +148,53 @@ public class KCCookieStore implements Serializable
 	 *
 	 * @see KCCookie#isExpired(Date)
 	 */
-	public synchronized boolean clearExpired(final Date date)
+	public boolean clearExpired(final Date date)
 	{
 		if (date == null)
 		{
 			return false;
 		}
 		boolean removed = false;
-		for (final Iterator<KCCookie> it = cookies.iterator(); it.hasNext();)
+
+		lock.lock();
+		try
 		{
-			if (it.next().isExpired(date))
+			for (final Iterator<KCCookie> it = cookies.iterator(); it.hasNext();)
 			{
-				it.remove();
-				removed = true;
+				if (it.next().isExpired(date))
+				{
+					it.remove();
+					removed = true;
+				}
 			}
 		}
+		finally
+		{
+			lock.unlock();
+		}
+
 		return removed;
 	}
 
 	/**
 	 * Clears all cookies.
 	 */
-	public synchronized void clear()
+	public boolean clear()
 	{
-		cookies.clear();
+		lock.lock();
+		try
+		{
+			if (cookies.isEmpty())
+			{
+				return false;
+			}
+			cookies.clear();
+		}
+		finally
+		{
+			lock.unlock();
+		}
+		return true;
 	}
 
 	@Override

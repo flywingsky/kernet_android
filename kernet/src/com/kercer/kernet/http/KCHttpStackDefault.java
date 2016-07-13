@@ -90,6 +90,10 @@ public class KCHttpStackDefault implements KCHttpStack
 	private static int DEFAULT_POOL_SIZE = 4096;
 
 	private static KCCookieManager mCookieManager = new KCCookieManager();
+	public static KCCookieManager defaultCookieManager()
+	{
+		return mCookieManager;
+	}
 
 	public KCHttpStackDefault()
 	{
