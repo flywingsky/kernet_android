@@ -409,6 +409,8 @@ public class KCCacheDisk implements KCCache
 	 * */
 	private static byte[] streamToBytes(InputStream in, int length) throws IOException
 	{
+		if (length <= 0) return null;
+		
 		byte[] bytes = new byte[length];
 		int count;
 		int pos = 0;
