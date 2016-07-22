@@ -1,5 +1,6 @@
 package com.kercer.kernet.uri;
 
+import com.kercer.kercore.debug.KCLog;
 import com.kercer.kercore.util.KCUtilText;
 
 import java.net.IDN;
@@ -790,7 +791,14 @@ public class KCURI
             String ascii = aHost;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.GINGERBREAD)
             {
-                ascii = IDN.toASCII(aHost);
+                try
+                {
+                    ascii = IDN.toASCII(aHost);
+                }
+                catch (IllegalArgumentException e)
+                {
+                    KCLog.e(e);
+                }
             }
             this.mHost = KCUtilURI.normalize(KCUtilURI.normalizeString(ascii, false), KCUtilURI.REGNAME);
         }
