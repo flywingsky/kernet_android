@@ -19,6 +19,7 @@ package com.kercer.kernet.http;
 import android.os.SystemClock;
 
 import com.kercer.kercore.debug.KCLog;
+import com.kercer.kercore.util.KCUtilText;
 import com.kercer.kernet.http.base.KCHeader;
 import com.kercer.kernet.http.base.KCHeaderGroup;
 
@@ -661,6 +662,7 @@ public class KCCacheDisk implements KCCache
 	{
 		int n = (int) readLong(is);
 		byte[] b = streamToBytes(is, n);
+		if (b == null) return "";
 		return new String(b, "UTF-8");
 	}
 
@@ -690,7 +692,10 @@ public class KCCacheDisk implements KCCache
 		{
 			String key = readString(is).intern();
 			String value = readString(is).intern();
-			result.addHeader(new KCHeader(key, value));
+			if (!KCUtilText.isEmpty(key))
+			{
+				result.addHeader(new KCHeader(key, value));
+			}
 		}
 		return result;
 	}
