@@ -84,7 +84,7 @@ public class KCHttpStackDefault implements KCHttpStack
 	}
 
 	private final KCUrlRewriter mUrlRewriter;
-	private final SSLSocketFactory mSslSocketFactory;
+	private SSLSocketFactory mSslSocketFactory;
 	protected final KCByteArrayPool mPool;
 
 	private static int DEFAULT_POOL_SIZE = 4096;
@@ -122,6 +122,32 @@ public class KCHttpStackDefault implements KCHttpStack
 		mPool = pool;
 
 	}
+
+
+	/**
+	 * Sets the SSL socket factory for this instance.
+	 *
+	 * @param aSF
+	 *            the SSL socket factory to be used by this instance.
+	 * @throws IllegalArgumentException
+	 *             if the specified socket factory is {@code null}.
+	 */
+	public void setSSLSocketFactory(SSLSocketFactory aSF)
+	{
+		mSslSocketFactory = aSF;
+	}
+
+	/**
+	 * Returns the SSL socket factory used by this instance.
+	 *
+	 * @return the SSL socket factory used by this instance.
+	 */
+	public SSLSocketFactory getSSLSocketFactory()
+	{
+		return mSslSocketFactory;
+	}
+
+
 
 	@Override
 	public KCHttpResponse performRequest(KCHttpRequest<?> request, KCHeaderGroup additionalHeaders, KCDeliveryResponse aDelivery) throws IOException, KCAuthFailureError
