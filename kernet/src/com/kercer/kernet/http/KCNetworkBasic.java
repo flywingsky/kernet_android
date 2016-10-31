@@ -43,7 +43,7 @@ import java.util.Date;
 
 
 /**
- * A network performing Volley requests over an {@link KCHttpStack}.
+ * A network performing requests over an {@link KCHttpStack}.
  */
 public class KCNetworkBasic implements KCNetwork
 {
