@@ -95,21 +95,16 @@ public class KCCookieSpec
 		final KCCharArrayBuffer buffer;
 		final KCParserCursor cursor;
 
-		// if (aHeader instanceof FormattedHeader) {
-		// buffer = ((FormattedHeader) aHeader).getBuffer();
-		// cursor = new ParserCursor(((FormattedHeader) aHeader).getValuePos(), buffer.length());
-		// }
-		// else
+
+		final String s = aHeader.getValue();
+		if (s == null)
 		{
-			final String s = aHeader.getValue();
-			if (s == null)
-			{
-				throw new KCCookieError("Header value is null");
-			}
-			buffer = new KCCharArrayBuffer(s.length());
-			buffer.append(s);
-			cursor = new KCParserCursor(0, buffer.length());
+			throw new KCCookieError("Header value is null");
 		}
+		buffer = new KCCharArrayBuffer(s.length());
+		buffer.append(s);
+		cursor = new KCParserCursor(0, buffer.length());
+
 
 		final String name = mTokenParser.parseToken(buffer, cursor, TOKEN_DELIMS);
 		if (name.length() == 0)
