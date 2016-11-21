@@ -22,14 +22,27 @@ import com.kercer.kernet.http.KCHttpResponse;
  * Indicates that the server's response could not be parsed.
  */
 @SuppressWarnings("serial")
-public class KCParseError extends KCNetError {
-    public KCParseError() { }
+public class KCParseError extends KCNetError
+{
+    private static final long serialVersionUID = -7288819855864183578L;
 
-    public KCParseError(KCHttpResponse networkResponse) {
+    public KCParseError()
+    {
+        super();
+    }
+
+    public KCParseError(KCHttpResponse networkResponse)
+    {
         super(networkResponse);
     }
 
-    public KCParseError(Throwable cause) {
+    public KCParseError(Throwable cause)
+    {
         super(cause);
+    }
+
+    public KCParseError(String message)
+    {
+        super(message);
     }
 }

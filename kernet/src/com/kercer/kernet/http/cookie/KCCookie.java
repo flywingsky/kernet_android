@@ -45,7 +45,7 @@ public interface KCCookie
 	 * <strong>Note:</strong> the object returned by this method is considered immutable. Changing it (e.g. using setTime()) could result in undefined
 	 * behaviour. Do so at your peril.
 	 * </p>
-	 * 
+	 *
 	 * @return Expiration {@link Date}, or {@code null}.
 	 */
 	Date getExpiryDate();
@@ -81,7 +81,7 @@ public interface KCCookie
 
 	/**
 	 * Returns true if this cookie has expired.
-	 * 
+	 *
 	 * @param date
 	 *            Current time
 	 *
