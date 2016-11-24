@@ -15,17 +15,25 @@ import com.kercer.kernet.download.KCDownloadListener;
 import com.kercer.kernet.http.KCHttpRequest;
 import com.kercer.kernet.http.KCHttpResponse;
 import com.kercer.kernet.http.KCHttpResult;
+import com.kercer.kernet.http.KCHttpStackDefault;
 import com.kercer.kernet.http.KCRequestQueue;
+import com.kercer.kernet.http.base.KCHeader;
+import com.kercer.kernet.http.base.KCHeaderElement;
 import com.kercer.kernet.http.base.KCHeaderGroup;
 import com.kercer.kernet.http.base.KCStatusLine;
+import com.kercer.kernet.http.cookie.KCCookie;
+import com.kercer.kernet.http.cookie.KCCookieManager;
+import com.kercer.kernet.http.cookie.KCCookieOrigin;
 import com.kercer.kernet.http.error.KCNetError;
 import com.kercer.kernet.http.listener.KCHttpListener;
 import com.kercer.kernet.http.request.KCStringRequest;
+import com.kercer.kernet.uri.KCURI;
 import com.kercer.kernet_example.R;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
+import java.util.List;
 
 public class MainActivity extends Activity
 {
@@ -66,6 +74,23 @@ public class MainActivity extends Activity
 //        download(urlImage);
 //        download(urlQiyiAPK);
 //        download(urlDek);
+
+        try
+        {
+            String headerValueStr = "user_id=100112; expires=Sat, 17-Dec-2016 15:17:39 GMT; Max-Age=3140000; path=/; domain=.doumi.com;doumi_melon=eyJpdiI6IkorMWNxeTJwN1B2XC9nXC9LVythXC8zNFE9PSIsInZhbHVlIjoiTzFrS3Q5VHZQVVRCMkpVTlwvY3k5cWxXSk5oM2Q2SmptbzVsOEFhMmZXWGVDcWJjT0xUNkdHenhTczhOUUZoMTBMXC83NGZ5dGhrVjAwbUtveEdNaTRUQT09IiwibWFjIjoiNTM2MjBiOTMwMTBkNmY5YjZlYWFmNzBmZGMxZDZmZTY3MTczNjZjYjIxMThlNjg3ZWU3OGZlZmFhOWIzZGIxYiJ9; expires=Thu, 01-Dec-2016 07:04:19 GMT; Max-Age=1728000; path=/; domain=doumi.com; httponly;";
+            KCHeader header = KCHeader.header("Cookie", headerValueStr);
+            KCHeaderElement[] elements = header.getElements();
+            KCCookieManager cookieManager = KCHttpStackDefault.defaultCookieManager();
+            List<KCCookie> list = cookieManager.getCookieSpec().parse(header, new KCCookieOrigin(new KCURI().parse("http://doumi.com")));
+            int count = list.size();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+
+
 
     }
 

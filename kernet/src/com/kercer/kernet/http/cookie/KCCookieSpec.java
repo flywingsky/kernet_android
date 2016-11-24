@@ -107,15 +107,25 @@ public class KCCookieSpec
         buffer.append(s);
         cursor = new KCParserCursor(0, buffer.length());
 
+        final List<KCCookie> cookies = new ArrayList<>();
+        parseValue(buffer, cursor, aOrigin, aHeader, cookies);
 
+//        return Collections.<KCCookie>singletonList(cookie);
+        return cookies;
+    }
+
+    public void parseValue(KCCharArrayBuffer buffer, KCParserCursor cursor, final KCCookieOrigin aOrigin, final KCHeader aHeader, List<KCCookie> cookies) throws KCCookieError
+    {
         final String name = mTokenParser.parseToken(buffer, cursor, TOKEN_DELIMS);
         if (name.length() == 0)
         {
-            return Collections.emptyList();
+//            return Collections.emptyList();
+            return;
         }
         if (cursor.atEnd())
         {
-            return Collections.emptyList();
+//            return Collections.emptyList();
+            return;
         }
         final int valueDelim = buffer.charAt(cursor.getPos());
         cursor.updatePos(cursor.getPos() + 1);
@@ -133,10 +143,20 @@ public class KCCookieSpec
         cookie.setDomain(getDefaultDomain(aOrigin));
         cookie.setCreationDate(new Date());
 
+        cookies.add(cookie);
+
         final Map<String, String> attribMap = new LinkedHashMap<String, String>();
         while (!cursor.atEnd())
         {
-            final String paramName = mTokenParser.parseToken(buffer, cursor, TOKEN_DELIMS).toLowerCase();
+            int lastPos = cursor.getPos();
+            final String nameStr = mTokenParser.parseToken(buffer, cursor, TOKEN_DELIMS);
+            final String paramName = nameStr.toLowerCase();
+            if (!KCClientCookie.RESERVED_NAMES.contains(paramName) && !this.mAttribHandlerMap.containsKey(paramName))
+            {
+                cursor.updatePos(lastPos);
+                break;
+            }
+
             String paramValue = null;
             if (!cursor.atEnd())
             {
@@ -171,8 +191,9 @@ public class KCCookieSpec
             }
         }
 
-        return Collections.<KCCookie>singletonList(cookie);
+        parseValue(buffer,cursor, aOrigin, aHeader, cookies);
     }
+
 
 
     public List<KCCookie> parse(final KCHeaderElement[] aElems, final KCCookieOrigin aOrigin) throws KCCookieError
