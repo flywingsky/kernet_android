@@ -59,7 +59,7 @@ public class KCLaxMaxAgeHandler implements KCCookieHandler
 			{
 				return;
 			}
-			final Date expiryDate = age >= 0 ? new Date(System.currentTimeMillis() + age * 1000L) : new Date(Long.MIN_VALUE);
+			final Date expiryDate = age > 0 ? new Date(System.currentTimeMillis() + age * 1000L) : new Date(Long.MIN_VALUE);
 			cookie.setExpiryDate(expiryDate);
 		}
 	}
