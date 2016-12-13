@@ -141,6 +141,35 @@ public class KCCookieStore implements Serializable
 		return modified;
 	}
 
+
+	/**
+	 * Remove all cookies from store
+	 */
+	public void removeAll(String aCookieName)
+	{
+		// argument can't be null
+		if (aCookieName == null)
+		{
+			throw new NullPointerException("cookie name is null");
+		}
+
+		lock.lock();
+		try
+		{
+			for (KCCookie cookie : cookies)
+			{
+				if (cookie != null && cookie.getName().equals(aCookieName))
+				{
+					cookies.remove(cookie);
+				}
+			}
+		}
+		finally
+		{
+			lock.unlock();
+		}
+	}
+
 	/**
 	 * Removes all of {@link KCCookie cookies} in this HTTP state that have expired by the specified {@link java.util.Date date}.
 	 *
