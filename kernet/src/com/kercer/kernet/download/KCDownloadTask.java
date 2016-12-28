@@ -239,20 +239,7 @@ public class KCDownloadTask
 		}
 
 		stopDownloadProgressAndSpeedUpdater();
-
-		if (mNotifier != null)
-		{
-			try
-			{
-				saveTotalDownloadTime();
-
-				mNotifier.onComplete(mDownloadedBytes, mFileLength, getTotalDownloadTime());
-			}
-			catch (Exception e)
-			{
-				KCLog.e(e);
-			}
-		}
+		saveTotalDownloadTime();
 
 		if (mDownloadEngine != null)
 		{
@@ -264,6 +251,18 @@ public class KCDownloadTask
 			mConfigFile.delete();
 		mDone = true;
 		mRunning = false;
+
+		if (mNotifier != null)
+		{
+			try
+			{
+				mNotifier.onComplete(mDownloadedBytes, mFileLength, getTotalDownloadTime());
+			}
+			catch (Exception e)
+			{
+				KCLog.e(e);
+			}
+		}
 	}
 
 	public void cancel()

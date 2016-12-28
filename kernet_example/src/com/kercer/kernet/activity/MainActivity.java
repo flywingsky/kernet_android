@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.kercer.kercore.debug.KCLog;
-import com.kercer.kercore.task.KCTaskExecutor;
 import com.kercer.kernet.KerNet;
 import com.kercer.kernet.download.KCDownloadEngine;
 import com.kercer.kernet.download.KCDownloadListener;
@@ -37,7 +36,7 @@ import java.util.List;
 
 public class MainActivity extends Activity
 {
-	private KCRequestQueue mRequestQueue;
+    private KCRequestQueue mRequestQueue;
     private KCDownloadEngine mDownloadEngine;
 
     @Override
@@ -51,30 +50,42 @@ public class MainActivity extends Activity
 
         KCLog.setTag("kernetTest");
 
+        testCookieParse();
+
 
         final String urlQQAPK = "http://gdown.baidu.com/data/wisegame/4f9b25fb0e093ac6/QQ_220.apk";
+        final String urlHttpsQQAPK = "https://qd.myapp.com/myapp/qqteam/AndroidQQ/mobileqq_android.apk";
         final String urlDek = "http://www.linzihong.com/test/update/html.dek";
         final String urlImage = "http://sta.ganji.com/att/project/app/parttime_job/doumi/banner_compensate.png";
         final String urlQiyiAPK = "http://111.206.23.3/cdn/qiyiapp/20160407/182642/ap/iqiyi_10258.apk";
 
-        for (int i = 0; i< 10; ++i)
-        {
-            int n = i*2000+5000;
-            KCTaskExecutor.scheduleTask(n, new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    download(urlDek);
-                }
-            });
+        //        for (int i = 0; i< 10; ++i)
+        //        {
+        //            int n = i*2000+5000;
+        //            KCTaskExecutor.scheduleTask(n, new Runnable()
+        //            {
+        //                @Override
+        //                public void run()
+        //                {
+        //                    download(urlDek);
+        //                }
+        //            });
+        //
+        //        }
+        //        download(urlQQAPK);
+        //        download(urlImage);
+        //        download(urlQiyiAPK);
+        //        download(urlDek);
 
-        }
-//        download(urlQQAPK);
-//        download(urlImage);
-//        download(urlQiyiAPK);
-//        download(urlDek);
+        download(urlHttpsQQAPK);
 
+        requestRunner("https://m.doumi.com/");
+
+    }
+
+
+    private void testCookieParse()
+    {
         try
         {
             String headerValueStr = "user_id=100112; expires=Sat, 17-Dec-2016 15:17:39 GMT; Max-Age=3140000; path=/; domain=.doumi.com;doumi_melon=eyJpdiI6IkorMWNxeTJwN1B2XC9nXC9LVythXC8zNFE9PSIsInZhbHVlIjoiTzFrS3Q5VHZQVVRCMkpVTlwvY3k5cWxXSk5oM2Q2SmptbzVsOEFhMmZXWGVDcWJjT0xUNkdHenhTczhOUUZoMTBMXC83NGZ5dGhrVjAwbUtveEdNaTRUQT09IiwibWFjIjoiNTM2MjBiOTMwMTBkNmY5YjZlYWFmNzBmZGMxZDZmZTY3MTczNjZjYjIxMThlNjg3ZWU3OGZlZmFhOWIzZGIxYiJ9; expires=Thu, 01-Dec-2016 07:04:19 GMT; Max-Age=1728000; path=/; domain=doumi.com; httponly;";
@@ -88,10 +99,6 @@ public class MainActivity extends Activity
         {
             e.printStackTrace();
         }
-
-
-
-
     }
 
     private String urlToPath(String aUrl)
@@ -108,39 +115,50 @@ public class MainActivity extends Activity
     public void download(final String aUrl)
     {
         final String path = urlToPath(aUrl);
-        try {
+        try
+        {
 
-            mDownloadEngine.startDownload(aUrl, path, new KCDownloadListener() {
+            mDownloadEngine.startDownload(aUrl, path, new KCDownloadListener()
+            {
                 @Override
-                public void onPrepare() {
+                public void onPrepare()
+                {
                     KCLog.d("onPrepare:%s", aUrl);
                     new File(path).delete();
                 }
 
                 @Override
-                public void onReceiveFileLength(long downloadedBytes, long fileLength) {
+                public void onReceiveFileLength(long downloadedBytes, long fileLength)
+                {
                     KCLog.d("onReceiveFileLength:%s:%s", downloadedBytes, fileLength);
                 }
 
                 @Override
-                public void onProgressUpdate(long downloadedBytes, long fileLength, int speed) {
+                public void onProgressUpdate(long downloadedBytes, long fileLength, int speed)
+                {
                     KCLog.d("onProgressUpdate:%s:%s:%s", downloadedBytes, fileLength, speed);
                 }
 
                 @Override
-                public void onComplete(long downloadedBytes, long fileLength, int totalTimeInSeconds) {
+                public void onComplete(long downloadedBytes, long fileLength, int totalTimeInSeconds)
+                {
                     KCLog.d("onComplete:%s:%s:%s", downloadedBytes, fileLength, totalTimeInSeconds);
                 }
 
                 @Override
-                public void onError(long downloadedBytes, Throwable e) {
+                public void onError(long downloadedBytes, Throwable e)
+                {
                     KCLog.d("onError%s", downloadedBytes);
                     KCLog.e(e);
                 }
             }, true, true);
-        } catch (FileNotFoundException e) {
+        }
+        catch (FileNotFoundException e)
+        {
             KCLog.e(e);
-        } catch (URISyntaxException e) {
+        }
+        catch (URISyntaxException e)
+        {
             KCLog.e(e);
         }
     }
@@ -150,15 +168,17 @@ public class MainActivity extends Activity
         KCStringRequest request = new KCStringRequest(aUrl, new KCHttpResult.KCHttpResultListener<String>()
         {
             @Override
-            public void onHttpResult(KCHttpResponse aResponse, String aResult) {
+            public void onHttpResult(KCHttpResponse aResponse, String aResult)
+            {
                 // TODO Auto-generated method stub
                 Log.i("kernet", aResult);
             }
 
-        } , new KCHttpListener()
+        }, new KCHttpListener()
         {
             @Override
-            public void onResponseHeaders(KCStatusLine aStatusLine, KCHeaderGroup aHeaderGroup) {
+            public void onResponseHeaders(KCStatusLine aStatusLine, KCHeaderGroup aHeaderGroup)
+            {
 
             }
 
@@ -184,7 +204,8 @@ public class MainActivity extends Activity
         KCHttpRequest<?> request1 = new KCHttpRequest<Object>(KCHttpRequest.Method.GET, aUrl, new KCHttpListener()
         {
             @Override
-            public void onResponseHeaders(KCStatusLine aStatusLine, KCHeaderGroup aHeaderGroup) {
+            public void onResponseHeaders(KCStatusLine aStatusLine, KCHeaderGroup aHeaderGroup)
+            {
 
             }
 
@@ -199,7 +220,8 @@ public class MainActivity extends Activity
             {
                 KCLog.e("");
             }
-        }) {
+        })
+        {
         };
         KerNet.newRequestRunner(null).startAsyn(request1);
     }
