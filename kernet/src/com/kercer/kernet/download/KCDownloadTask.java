@@ -15,6 +15,8 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.net.ssl.SSLSocketFactory;
+
 /**
  *
  * @author zihong
@@ -80,6 +82,8 @@ public class KCDownloadTask
 
 	private long mStartDownloadTimestamp;
 
+	protected SSLSocketFactory mSslSocketFactory;
+
 
 	public KCDownloadTask(KCDownloadEngine aEngine, URL aUrl, String aDestFilePath) throws FileNotFoundException
 	{
@@ -103,6 +107,32 @@ public class KCDownloadTask
 		else
 			mDownloadConfig = aDownloadConfig;
 	}
+
+
+
+	/**
+	 * Sets the SSL socket factory for this instance.
+	 *
+	 * @param aSF
+	 *            the SSL socket factory to be used by this instance.
+	 * @throws IllegalArgumentException
+	 *             if the specified socket factory is {@code null}.
+	 */
+	public void setSSLSocketFactory(SSLSocketFactory aSF)
+	{
+		mSslSocketFactory = aSF;
+	}
+
+	/**
+	 * Returns the SSL socket factory used by this instance.
+	 *
+	 * @return the SSL socket factory used by this instance.
+	 */
+	public SSLSocketFactory getSSLSocketFactory()
+	{
+		return mSslSocketFactory;
+	}
+
 
 	//is Download task identity
 	public String getCacheKey()

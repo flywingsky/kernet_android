@@ -13,6 +13,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Locale;
 
+import javax.net.ssl.HttpsURLConnection;
+
 /**
  * Created by zihong on 16/4/11.
  */
@@ -289,12 +291,12 @@ class KCDownloadWorker
 
             mDestRandomAccessFile.seek(mStartByteOffset);
 
-            mHttpConn = (HttpURLConnection) mDownloadTask.mUrl.openConnection();
+            mHttpConn = openConnection(mDownloadTask.mUrl);
             mHttpConn.addRequestProperty("Range", "bytes=" + mStartByteOffset + "-" + (mEndByteOffset - 1));
         }
         else
         {
-            mHttpConn = (HttpURLConnection) mDownloadTask.mUrl.openConnection();
+            mHttpConn = openConnection(mDownloadTask.mUrl);
         }
         // we are not expecting gzip. just give the raw bytes.
         mHttpConn.setRequestProperty("Accept-Encoding", "identity");
@@ -307,6 +309,48 @@ class KCDownloadWorker
 
         mHttpConn.setRequestMethod("GET");
         return true;
+    }
+
+
+    /**
+     * Create an {@link HttpURLConnection} for the specified {@code url}.
+     */
+    protected HttpURLConnection createConnection(URL url) throws IOException
+    {
+        //		return (HttpURLConnection) url.openConnection();
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        return connection;
+    }
+
+    /**
+     * Opens an {@link HttpURLConnection} with parameters.
+     *
+     * @param url
+     * @return an open connection
+     * @throws IOException
+     */
+    private HttpURLConnection openConnection(URL url) throws IOException
+    {
+        HttpURLConnection connection = createConnection(url);
+
+//        // Workaround for the M release HttpURLConnection not observing the
+//        // HttpURLConnection.setFollowRedirects() property.
+//        // https://code.google.com/p/android/issues/detail?id=194495
+//        //connection.setInstanceFollowRedirects(HttpURLConnection.getFollowRedirects());
+//        connection.setInstanceFollowRedirects(request.getFollowRedirects());
+//        int timeoutMs = request.getTimeoutMs();
+//        connection.setConnectTimeout(timeoutMs);
+//        connection.setReadTimeout(timeoutMs);b
+//        connection.setUseCaches(false);
+//        connection.setDoInput(true);
+
+        // use caller-provided custom SslSocketFactory, if any, for HTTPS
+        if ("https".equals(url.getProtocol()) && mDownloadTask.mSslSocketFactory != null)
+        {
+            ((HttpsURLConnection) connection).setSSLSocketFactory(mDownloadTask.mSslSocketFactory);
+        }
+
+        return connection;
     }
 
     private void handlePartialContent(boolean init) throws Exception
