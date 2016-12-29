@@ -165,9 +165,16 @@ public class KCDownloadTask
 
 				if (!mDestFile.exists() || !mConfigFile.exists())
 				{
+					File parentFile = mDestFile.getParentFile();
+					if (parentFile != null && !parentFile.exists())
+					{
+						parentFile.mkdirs();
+					}
+
 					mDestFile.delete();
 					mConfigFile.delete();
 				}
+
 
 				// if resumable download is required, a config file should be created to keep the configurations
 				if (useResumable)

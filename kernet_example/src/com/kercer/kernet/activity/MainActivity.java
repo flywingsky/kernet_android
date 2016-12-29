@@ -104,10 +104,6 @@ public class MainActivity extends Activity
     private String urlToPath(String aUrl)
     {
         String path = Environment.getExternalStorageDirectory().getPath() + "/kernet";
-        if (!new File(path).exists())
-        {
-            new File(path).mkdir();
-        }
         path += aUrl.substring(aUrl.lastIndexOf(File.separator), aUrl.length());
         return path;
     }
