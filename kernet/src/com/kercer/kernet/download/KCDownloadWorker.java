@@ -287,7 +287,7 @@ class KCDownloadWorker
             }
 
             if (mDestRandomAccessFile == null)
-                mDestRandomAccessFile = new RandomAccessFile(mDownloadTask.mDestFilePath, "rw");
+                mDestRandomAccessFile = new RandomAccessFile(mDownloadTask.mDestFile, "rw");
 
             mDestRandomAccessFile.seek(mStartByteOffset);
 
@@ -598,7 +598,7 @@ class KCDownloadWorker
             mDownloadTask.mNotifier.onReceiveFileLength(0, mDownloadTask.mFileLength);
         mDownloadTask.mDownloadedBytes = 0;
 
-        FileOutputStream fos = new FileOutputStream(mDownloadTask.mDestFilePath);
+        FileOutputStream fos = new FileOutputStream(mDownloadTask.mDestFile);
 
         InputStream is = null;
 

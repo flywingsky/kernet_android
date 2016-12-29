@@ -124,12 +124,14 @@ public class MainActivity extends Activity
                 public void onPrepare()
                 {
                     KCLog.d("onPrepare:%s", aUrl);
-                    new File(path).delete();
+//                    new File(path).delete();
                 }
 
                 @Override
                 public void onReceiveFileLength(long downloadedBytes, long fileLength)
                 {
+                    long lDownloadedBytes = downloadedBytes;
+                    long lFileLength = fileLength;
                     KCLog.d("onReceiveFileLength:%s:%s", downloadedBytes, fileLength);
                 }
 

@@ -55,7 +55,7 @@ public class KCDownloadTask
 
 	protected KCDownloadConfig mDownloadConfig = new KCDownloadConfig();
 
-	protected String mDestFilePath;
+	protected File mDestFile;
 	private File mConfigFile;
 	private FileChannel mConfigFileChannel;
 	protected LongBuffer mConfigHeaderBuffer;
@@ -100,7 +100,8 @@ public class KCDownloadTask
 	{
 		mDownloadEngine = aDownloadEngine;
 		mOrigUrl = mUrl = aUrl; // keep the original url
-		mDestFilePath = aDestFilePath;
+		mDestFile = new File(aDestFilePath);
+		mConfigFile = new File(mDestFile.getAbsolutePath() + ".cfg");
 		mNotifier = aNotifier;
 		if (aDownloadConfig == null)
 			mDownloadConfig = new KCDownloadConfig();
@@ -162,6 +163,12 @@ public class KCDownloadTask
 				if (mNotifier != null)
 					mNotifier.onPrepare();
 
+				if (!mDestFile.exists() || !mConfigFile.exists())
+				{
+					mDestFile.delete();
+					mConfigFile.delete();
+				}
+
 				// if resumable download is required, a config file should be created to keep the configurations
 				if (useResumable)
 				{
@@ -200,7 +207,6 @@ public class KCDownloadTask
 	@SuppressWarnings("resource")
 	private void initConfigFileBuffer() throws IOException
 	{
-		mConfigFile = new File(mDestFilePath + ".cfg");
 		mConfigFileChannel = new RandomAccessFile(mConfigFile, "rw").getChannel();
 		// the length of the config file is fixed
 		int configFileSize = (Long.SIZE / 8 * KCDownloadConfig.CONFIG_HEADER_SIZE) + (mDownloadConfig.getThreadCountPerTask() * KCDownloadConfig.CONFIG_BYTE_OFFSET_SLOT_COUNT * (Long.SIZE / 8));
