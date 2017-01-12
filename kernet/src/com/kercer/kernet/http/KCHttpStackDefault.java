@@ -32,6 +32,7 @@ import com.kercer.kernet.http.error.KCAuthFailureError;
 import com.kercer.kernet.http.listener.KCHttpProgressListener;
 import com.kercer.kernet.http.request.KCMultiPartRequest;
 import com.kercer.kernet.http.request.KCMultiPartRequest.KCMultiPartParam;
+import com.kercer.kernet.http.ssl.KCSSLManager;
 import com.kercer.kernet.uri.KCURI;
 
 import java.io.BufferedInputStream;
@@ -118,8 +119,8 @@ public class KCHttpStackDefault implements KCHttpStack
 	public KCHttpStackDefault(KCUrlRewriter urlRewriter, SSLSocketFactory sslSocketFactory, KCByteArrayPool pool)
 	{
 		mUrlRewriter = urlRewriter;
-		mSslSocketFactory = sslSocketFactory;
 		mPool = pool;
+		setSSLSocketFactory(sslSocketFactory);
 
 	}
 
@@ -134,7 +135,14 @@ public class KCHttpStackDefault implements KCHttpStack
 	 */
 	public void setSSLSocketFactory(SSLSocketFactory aSF)
 	{
-		mSslSocketFactory = aSF;
+		if (aSF == null)
+		{
+			mSslSocketFactory = KCSSLManager.setCertificates().mSSLSocketFactory;
+		}
+		else
+		{
+			mSslSocketFactory = aSF;
+		}
 	}
 
 	/**

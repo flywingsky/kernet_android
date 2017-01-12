@@ -1,174 +1,234 @@
 package com.kercer.kernet.http.ssl;
 
-import java.io.ByteArrayInputStream;
-import java.io.Closeable;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import com.kercer.kercore.debug.KCLog;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.GeneralSecurityException;
+import java.security.KeyManagementException;
 import java.security.KeyStore;
-import java.security.SecureRandom;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 
-
-/**
- * Created by zihong on 2016/10/29.
- */
-public final class KCSSLManager
+public class KCSSLManager
 {
-    private static SSLSocketFactory mDefaultSslSocketFactory;
-    private SSLSocketFactory mSslSocketFactory;
 
-    private synchronized SSLSocketFactory getDefaultSSLSocketFactory()
+    public static class KCSSLParams
     {
-        if (mDefaultSslSocketFactory == null)
+        public SSLSocketFactory mSSLSocketFactory;
+        public X509TrustManager mTrustManager;
+    }
+
+    public static KCSSLParams getSslSocketFactory(X509TrustManager trustManager, InputStream bksFile, String password, InputStream[] certificates)
+    {
+        KCSSLParams sslParams = new KCSSLParams();
+        try
         {
-            try
+            KeyManager[] keyManagers = prepareKeyManager(bksFile, password);
+            TrustManager[] trustManagers = prepareTrustManager(certificates);
+            X509TrustManager manager;
+            if (trustManager != null)
             {
-                SSLContext sslContext = SSLContext.getInstance("TLS");
-                sslContext.init(null, null, null);
-                mDefaultSslSocketFactory = sslContext.getSocketFactory();
+                //优先使用用户自定义的TrustManager
+                manager = trustManager;
             }
-            catch (GeneralSecurityException e)
+            else if (trustManagers != null)
             {
-                throw new AssertionError(); // The system has no TLS. Just give up.
+                //然后使用默认的TrustManager
+                manager = chooseTrustManager(trustManagers);
             }
+            else
+            {
+                //否则使用不安全的TrustManager
+                manager = UnSafeTrustManager;
+            }
+            // 创建TLS类型的SSLContext对象， that uses our TrustManager
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            // 用上面得到的trustManagers初始化SSLContext，这样sslContext就会信任keyStore中的证书
+            // 第一个参数是授权的密钥管理器，用来授权验证，比如授权自签名的证书验证。第二个是被授权的证书管理器，用来验证服务器端的证书
+            sslContext.init(keyManagers, new TrustManager[]{manager}, null);
+//            sslContext.init(keyManagers, new TrustManager[]{manager}, new SecureRandom());
+
+            // 通过sslContext获取SSLSocketFactory对象
+            sslParams.mSSLSocketFactory = sslContext.getSocketFactory();
+            sslParams.mTrustManager = manager;
+            return sslParams;
         }
-        return mDefaultSslSocketFactory;
+        catch (NoSuchAlgorithmException e)
+        {
+            throw new AssertionError(e);
+        }
+        catch (KeyManagementException e)
+        {
+            throw new AssertionError(e);
+        }
     }
 
-    public void setSslSocketFactory(SSLSocketFactory sslSocketFactory)
-    {
-        this.mSslSocketFactory = sslSocketFactory;
-    }
-
-    public static KeyStore getKeyStore(String keyStorePath, String pwd) throws Exception
-    {
-        KeyStore ks = KeyStore.getInstance("JKS");
-        FileInputStream is = new FileInputStream(keyStorePath);
-        ks.load(is, pwd.toCharArray());
-        is.close();
-        return ks;
-    }
-
-    public static SSLContext getSSLContext(String keyStorePath, String pwd, String trustStorePath) throws Exception
-    {
-        KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-        KeyStore keyStore = getKeyStore(pwd, keyStorePath);
-        keyManagerFactory.init(keyStore, pwd.toCharArray());
-        TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-        KeyStore trustStore = getKeyStore(pwd, trustStorePath);
-        trustManagerFactory.init(trustStore);
-        SSLContext sslContext = SSLContext.getInstance("TLS");
-        sslContext.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), null);
-        return sslContext;
-    }
-
-
-    public void setSslSocketFactory(InputStream... cerInputStream)
+    private static KeyManager[] prepareKeyManager(InputStream bksFile, String password)
     {
         try
         {
-            CertificateFactory certificatefactory = CertificateFactory.getInstance("X.509");
-            KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-            keyStore.load(null);
-            int index = 0;
-            for (InputStream is : cerInputStream)
-            {
-                X509Certificate cert = (X509Certificate) certificatefactory.generateCertificate(is);
-                keyStore.setCertificateEntry("alias" + index++, cert);
-            }
-
-            SSLContext sslContext = SSLContext.getInstance("TLS");//安全数据层
-
-            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());//信任证书管理工厂
-
-            trustManagerFactory.init(keyStore);
-
-            sslContext.init(null, trustManagerFactory.getTrustManagers(), new SecureRandom());
-
-            mSslSocketFactory = sslContext.getSocketFactory();
+            if (bksFile == null || password == null) return null;
+            KeyStore clientKeyStore = KeyStore.getInstance("BKS");
+            clientKeyStore.load(bksFile, password.toCharArray());
+            KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+            kmf.init(clientKeyStore, password.toCharArray());
+            return kmf.getKeyManagers();
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            KCLog.e(e);
         }
-        finally
-        {
-            KCSSLManager.close(cerInputStream);
-        }
+        return null;
     }
 
-    /**
-     *
-     * @param cerPaths cerPaths
-     */
-    public void setSslSocketFactory(String... cerPaths)
+    private static TrustManager[] prepareTrustManager(InputStream... certificates)
     {
-        FileInputStream[] cers = new FileInputStream[cerPaths.length];
-        for (int i = 0; i < cerPaths.length; i++)
+        if (certificates == null || certificates.length <= 0) return null;
+        try
         {
-            File file = new File(cerPaths[i]);
-            if (file.exists())
+            CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+            // 创建一个默认类型的KeyStore，存储我们信任的证书
+            KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            keyStore.load(null);
+            int index = 0;
+            for (InputStream certStream : certificates)
             {
+                String certificateAlias = Integer.toString(index++);
+                // 证书工厂根据证书文件的流生成证书 cert
+                Certificate cert = certificateFactory.generateCertificate(certStream);
+                // 将 cert 作为可信证书放入到keyStore中
+                keyStore.setCertificateEntry(certificateAlias, cert);
                 try
                 {
-                    cers[i] = new FileInputStream(file);
+                    if (certStream != null) certStream.close();
                 }
-                catch (FileNotFoundException e)
+                catch (IOException e)
                 {
-                    e.printStackTrace();
+                    KCLog.e(e);
                 }
             }
+            //我们创建一个默认类型的TrustManagerFactory
+            TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            //用我们之前的keyStore实例初始化TrustManagerFactory，这样tmf就会信任keyStore中的证书
+            tmf.init(keyStore);
+            //通过tmf获取TrustManager数组，TrustManager也会信任keyStore中的证书
+            return tmf.getTrustManagers();
         }
-        setSslSocketFactory(cers);
+        catch (Exception e)
+        {
+            KCLog.e(e);
+        }
+        return null;
+    }
+
+    private static X509TrustManager chooseTrustManager(TrustManager[] trustManagers)
+    {
+        for (TrustManager trustManager : trustManagers)
+        {
+            if (trustManager instanceof X509TrustManager)
+            {
+                return (X509TrustManager) trustManager;
+            }
+        }
+        return null;
     }
 
     /**
-     *
-     * @param cerValues cerValues
+     * 为了解决客户端不信任服务器数字证书的问题，网络上大部分的解决方案都是让客户端不对证书做任何检查，
+     * 这是一种有很大安全漏洞的办法
      */
-    public void setSslSocketFactoryAsString(String... cerValues)
+    public static X509TrustManager UnSafeTrustManager = new X509TrustManager()
     {
-        ByteArrayInputStream[] cers = new ByteArrayInputStream[cerValues.length];
-        for (int i = 0; i < cerValues.length; i++)
+        @Override
+        public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException
         {
-            cers[i] = new ByteArrayInputStream(cerValues[i].getBytes());
         }
-        setSslSocketFactory(cers);
-    }
 
-    public SSLSocketFactory getSslSocketFactory()
-    {
-        return mSslSocketFactory == null ? getDefaultSSLSocketFactory() : mSslSocketFactory;
-    }
-
-
-    public static void close(Closeable... closeables)
-    {
-        for (Closeable cb : closeables)
+        @Override
+        public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException
         {
-            try
-            {
-                if (null == cb)
-                {
-                    continue;
-                }
-                cb.close();
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
         }
+
+        @Override
+        public X509Certificate[] getAcceptedIssuers()
+        {
+            return new java.security.cert.X509Certificate[]{};
+        }
+    };
+
+    /**
+     * 此类是用于主机名验证的基接口。 在握手期间，如果 URL 的主机名和服务器的标识主机名不匹配，
+     * 则验证机制可以回调此接口的实现程序来确定是否应该允许此连接。策略可以是基于证书的或依赖于其他验证方案。
+     * 当验证 URL 主机名使用的默认规则失败时使用这些回调。如果主机名是可接受的，则返回 true
+     */
+    public static HostnameVerifier UnSafeHostnameVerifier = new HostnameVerifier()
+    {
+        @Override
+        public boolean verify(String hostname, SSLSession session)
+        {
+            return true;
+        }
+    };
+
+
+    /**
+     * https的自定义域名访问规则
+     */
+    private static void setHostnameVerifier(HostnameVerifier hostnameVerifier)
+    {
     }
+
+    /**
+     * https单向认证
+     * 用含有服务端公钥的证书校验服务端证书
+     */
+    public static KCSSLParams setCertificates(InputStream... certificates)
+    {
+        return setCertificates(null, null, certificates);
+    }
+
+    /**
+     * https单向认证
+     * 可以额外配置信任服务端的证书策略，否则默认是按CA证书去验证的，若不是CA可信任的证书，则无法通过验证
+     */
+    public static KCSSLParams setCertificates(X509TrustManager trustManager)
+    {
+        return setCertificates(null, null, trustManager);
+    }
+
+    /**
+     * https双向认证
+     * bksFile 和 password -> 客户端使用bks证书校验服务端证书
+     * certificates -> 用含有服务端公钥的证书校验服务端证书
+     */
+    public static KCSSLParams setCertificates(InputStream bksFile, String password, InputStream... certificates)
+    {
+        KCSSLParams sslParams = KCSSLManager.getSslSocketFactory(null, bksFile, password, certificates);
+        return sslParams;
+    }
+
+    /**
+     * https双向认证
+     * bksFile 和 password -> 客户端使用bks证书校验服务端证书
+     * X509TrustManager -> 如果需要自己校验，那么可以自己实现相关校验，如果不需要自己校验，那么传null即可
+     */
+    public static KCSSLParams setCertificates(InputStream bksFile, String password, X509TrustManager trustManager)
+    {
+        KCSSLParams sslParams = KCSSLManager.getSslSocketFactory(trustManager, bksFile, password, null);
+        return sslParams;
+    }
+
 }
-

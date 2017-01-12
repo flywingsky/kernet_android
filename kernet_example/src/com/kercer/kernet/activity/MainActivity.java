@@ -11,8 +11,10 @@ import com.kercer.kercore.debug.KCLog;
 import com.kercer.kernet.KerNet;
 import com.kercer.kernet.download.KCDownloadEngine;
 import com.kercer.kernet.download.KCDownloadListener;
+import com.kercer.kernet.http.KCHttpHeaderParser;
 import com.kercer.kernet.http.KCHttpRequest;
 import com.kercer.kernet.http.KCHttpResponse;
+import com.kercer.kernet.http.KCHttpResponseParser;
 import com.kercer.kernet.http.KCHttpResult;
 import com.kercer.kernet.http.KCHttpStackDefault;
 import com.kercer.kernet.http.KCRequestQueue;
@@ -31,6 +33,7 @@ import com.kercer.kernet_example.R;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.util.List;
 
@@ -77,9 +80,9 @@ public class MainActivity extends Activity
         //        download(urlQiyiAPK);
         //        download(urlDek);
 
-        download(urlHttpsQQAPK);
+//        download(urlHttpsQQAPK);
 
-        requestRunner("https://m.doumi.com/");
+        requestRunner("https://jz-c-test.doumi.com/dek/cache.manifest");
 
     }
 
@@ -204,7 +207,6 @@ public class MainActivity extends Activity
             @Override
             public void onResponseHeaders(KCStatusLine aStatusLine, KCHeaderGroup aHeaderGroup)
             {
-
             }
 
             @Override
@@ -221,6 +223,34 @@ public class MainActivity extends Activity
         })
         {
         };
+
+        //if pasr string you can use KCStringRequest
+        request1.setResponseParser(new KCHttpResponseParser()
+        {
+            @Override
+            public KCHttpResult<?> parseHttpResponse(KCHttpResponse response)
+            {
+                String parsed;
+                try
+                {
+                    parsed = new String(response.getContent(), KCHttpHeaderParser.parseCharset(response.getHeaderGroup()));
+                }
+                catch (UnsupportedEncodingException e)
+                {
+                    parsed = new String(response.getContent());
+                }
+                return KCHttpResult.success(parsed, KCHttpHeaderParser.parseCacheHeaders(response));
+            }
+
+            @Override
+            public KCNetError parseHttpError(KCNetError aError)
+            {
+                return aError;
+            }
+        });
+
+
+
         KerNet.newRequestRunner(null).startAsyn(request1);
     }
 
