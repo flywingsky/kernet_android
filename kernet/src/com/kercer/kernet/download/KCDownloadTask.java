@@ -2,6 +2,7 @@ package com.kercer.kernet.download;
 
 import com.kercer.kercore.debug.KCLog;
 import com.kercer.kercore.io.KCUtilIO;
+import com.kercer.kernet.http.ssl.KCSSLManager;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -107,6 +108,8 @@ public class KCDownloadTask
 			mDownloadConfig = new KCDownloadConfig();
 		else
 			mDownloadConfig = aDownloadConfig;
+
+		setSSLSocketFactory(null);
 	}
 
 
@@ -121,7 +124,14 @@ public class KCDownloadTask
 	 */
 	public void setSSLSocketFactory(SSLSocketFactory aSF)
 	{
-		mSslSocketFactory = aSF;
+		if (aSF == null)
+		{
+			mSslSocketFactory = KCSSLManager.setCertificates().mSSLSocketFactory;
+		}
+		else
+		{
+			mSslSocketFactory = aSF;
+		}
 	}
 
 	/**
